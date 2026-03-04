@@ -14,11 +14,9 @@ fetch("gallery.json")
 
     projects.forEach(project => {
 
-        // Outer grid item (NOT clickable anymore)
         const wrapper = document.createElement("div");
         wrapper.classList.add("gallery-item");
 
-        // Clickable image wrapper
         const imgWrapper = document.createElement("div");
         imgWrapper.classList.add("img-wrapper");
 
@@ -26,13 +24,9 @@ fetch("gallery.json")
         img.src = project.cover;
         img.loading = "lazy";
 
-        // const title = document.createElement("div");
-        // title.classList.add("gallery-title");
-        // title.textContent = project.name;
         imgWrapper.dataset.title = project.name;
 
         imgWrapper.appendChild(img);
-        // imgWrapper.appendChild(title);
         wrapper.appendChild(imgWrapper);
 
         imgWrapper.addEventListener("click", () => {
@@ -59,21 +53,35 @@ document.addEventListener("mousemove", e => {
     label.style.top = (e.clientY - 8) + "px";
 });
 
+
+// --------------------
+// CURSOR HOVER STATES
+// --------------------
 document.addEventListener("mouseover", e => {
-    const wrapper = e.target.closest(".img-wrapper");
-    if (wrapper) {
+    const imgWrapper = e.target.closest(".img-wrapper");
+    const arrow = e.target.closest(".viewer-arrow");
+    const footerLink = e.target.closest("a, button");
+
+    if (imgWrapper) {
         cursor.classList.add("hovering");
-        label.textContent = wrapper.dataset.title;
-        const parts = wrapper.dataset.title.split(": ");
+        const parts = imgWrapper.dataset.title.split(": ");
         label.innerHTML = parts[0] + ":<br>" + (parts[1] || "");
         label.classList.add("visible");
+    } else if (arrow || footerLink) {
+        cursor.classList.add("hovering");
     }
 });
 
 document.addEventListener("mouseout", e => {
-    if (e.target.closest(".img-wrapper")) {
-        cursor.classList.remove("hovering");
+    const imgWrapper = e.target.closest(".img-wrapper");
+    const arrow = e.target.closest(".viewer-arrow");
+    const footerLink = e.target.closest("a, button");
+
+    if (imgWrapper) {
         label.classList.remove("visible");
+    }
+    if (imgWrapper || arrow || footerLink) {
+        cursor.classList.remove("hovering");
     }
 });
 
@@ -108,7 +116,6 @@ function openProject(project) {
 
     viewer.appendChild(track);
 
-    // Add arrows
     const leftArrow = document.createElement("div");
     leftArrow.classList.add("viewer-arrow", "left");
     leftArrow.innerHTML = "‹";
@@ -149,81 +156,18 @@ function prevSlide() {
     }
 }
 
+
 // --------------------------
-// LEFT - RIGHT NAVIGATION
+// KEYBOARD NAVIGATION
 // --------------------------
 document.addEventListener("keydown", e => {
     if (!viewer.classList.contains("active")) return;
 
-    if (e.key === "ArrowRight") {
-        nextSlide();
-    }
-
-    if (e.key === "ArrowLeft") {
-        prevSlide();
-    }
-
-    if (e.key === "Escape") {
-        viewer.classList.remove("active");
-        viewer.innerHTML = "";
-    }
+    if (e.key === "ArrowRight") nextSlide();
+    if (e.key === "ArrowLeft") prevSlide();
+    if (e.key === "Escape") closeViewer();
 });
 
-document.addEventListener("mouseover", e => {
-    const imgWrapper = e.target.closest(".img-wrapper");
-    const arrow = e.target.closest(".viewer-arrow");
-    const footerLink = e.target.closest("a, button");
-
-    if (imgWrapper) {
-        cursor.classList.add("hovering");
-        const parts = imgWrapper.dataset.title.split(": ");
-        label.innerHTML = parts[0] + ":<br>" + (parts[1] || "");
-        label.classList.add("visible");
-    } else if (arrow || footerLink) {
-        cursor.classList.add("hovering");
-    }
-});
-
-document.addEventListener("mouseout", e => {
-    const imgWrapper = e.target.closest(".img-wrapper");
-    const arrow = e.target.closest(".viewer-arrow");
-    const footerLink = e.target.closest("a, button");
-
-    if (imgWrapper) {
-        label.classList.remove("visible");
-    }
-    if (imgWrapper || arrow || footerLink) {
-        cursor.classList.remove("hovering");
-    }
-});
-
-document.addEventListener("mouseover", e => {
-    const imgWrapper = e.target.closest(".img-wrapper");
-    const arrow = e.target.closest(".viewer-arrow");
-    const footerLink = e.target.closest("a, button");
-
-    if (imgWrapper) {
-        cursor.classList.add("hovering");
-        const parts = imgWrapper.dataset.title.split(": ");
-        label.innerHTML = parts[0] + ":<br>" + (parts[1] || "");
-        label.classList.add("visible");
-    } else if (arrow || footerLink) {
-        cursor.classList.add("hovering");
-    }
-});
-
-document.addEventListener("mouseout", e => {
-    const imgWrapper = e.target.closest(".img-wrapper");
-    const arrow = e.target.closest(".viewer-arrow");
-    const footerLink = e.target.closest("a, button");
-
-    if (imgWrapper) {
-        label.classList.remove("visible");
-    }
-    if (imgWrapper || arrow || footerLink) {
-        cursor.classList.remove("hovering");
-    }
-});
 
 // --------------------
 // CLOSE VIEWER
@@ -234,7 +178,7 @@ function closeViewer() {
 }
 
 viewer.addEventListener("click", (e) => {
-    if (!e.target.closest(".viewer-slide img") && 
+    if (!e.target.closest(".viewer-slide img") &&
         !e.target.closest(".viewer-arrow")) {
         closeViewer();
     }
@@ -242,17 +186,46 @@ viewer.addEventListener("click", (e) => {
 
 
 // --------------------
+// SMOOTH SCROLL SNAP (desktop only)
+// --------------------
+const scrollContainer = document.getElementById("scrollContainer");
+let isScrolling = false;
+
+if (window.innerWidth > 768) {
+    scrollContainer.addEventListener("wheel", (e) => {
+        e.preventDefault();
+
+        if (isScrolling) return;
+        isScrolling = true;
+
+        const direction = e.deltaY > 0 ? 1 : -1;
+        const itemHeight = scrollContainer.clientHeight;
+        const currentSnap = Math.round(scrollContainer.scrollTop / itemHeight);
+        const targetScrollTop = (currentSnap + direction) * itemHeight;
+
+        scrollContainer.scrollTo({
+            top: targetScrollTop,
+            behavior: "smooth"
+        });
+
+        setTimeout(() => {
+            isScrolling = false;
+        }, 800);
+
+    }, { passive: false });
+}
+
+
+// --------------------
 // SHOW FOOTER ON LAST ROW
 // --------------------
 const footer = document.querySelector(".footer");
-const scrollContainer = document.getElementById("scrollContainer");
 
 scrollContainer.addEventListener("scroll", () => {
     const scrollBottom = scrollContainer.scrollTop + scrollContainer.clientHeight;
     const totalHeight = scrollContainer.scrollHeight;
-    
-    // Show footer when user is in the last 2 "pages" of scroll
-    if (scrollBottom >= totalHeight - scrollContainer.clientHeight ) {
+
+    if (scrollBottom >= totalHeight - scrollContainer.clientHeight) {
         footer.classList.add("visible");
     } else {
         footer.classList.remove("visible");

@@ -241,3 +241,28 @@ body {
 .footer a:hover svg {
     color: #555;
 }
+
+@media (max-width: 768px) {
+    .gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-item {
+        height: auto;
+        padding: 60px 0 20px 0;
+        scroll-snap-align: none;
+    }
+
+    .img-wrapper img {
+        max-width: 85vw;
+        max-height: none;
+    }
+
+    .gallery-container {
+        scroll-snap-type: none;
+    }
+
+    .header {
+        font-size: 22px;
+    }
+}
