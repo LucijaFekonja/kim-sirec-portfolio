@@ -1,0 +1,243 @@
+body {
+    margin: 0;
+    background-color: #f4f3f3;
+}
+
+.libertinus-mono-regular {
+  font-family: "Libertinus Mono", monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.header {
+    position: fixed;
+    top: 20px;
+    width: 100%;
+    text-align: center;
+    /* padding: 20px; */
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.gallery-container {
+    margin-top: 0;
+    height: 100vh;
+    overflow-y: auto;
+
+    /* Scroll snap setup */
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* Each pair row is a snap section */
+.gallery-item {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    scroll-snap-align: center;
+    position: relative;
+}
+
+/* Overlay */
+.img-wrapper {
+    position: relative;
+    display: inline-flex;
+    line-height: 0;
+}
+
+.img-wrapper img {
+    display: block;
+    max-width: 40vw;   /* controls width since gallery is 2 columns */
+    max-height: 80vh;
+}
+
+.img-wrapper:hover img {
+    opacity: 0.25;
+}
+
+/* .gallery-title {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-size: 18px;
+    text-align: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.img-wrapper:hover .gallery-title {
+    opacity: 1;
+} */
+
+.cursor-label {
+    position: fixed;
+    pointer-events: none;
+    font-size: 14px;
+    color: black;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+}
+
+.cursor-label.visible {
+    opacity: 1;
+}
+
+* {
+    cursor: none;
+}
+
+.custom-cursor {
+    position: fixed;
+    width: 9px;
+    height: 9px;
+    background: black;           /* solid black square */
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: 
+        transform 0.2s ease,
+        width 0.2s ease,
+        height 0.2s ease,
+        background 0.2s ease;
+    z-index: 9999;
+}
+
+/* Diamond on hover */
+.custom-cursor.hovering {
+    width: 9px;
+    height: 9px;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.viewer {
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 2000;
+    overflow: hidden;
+}
+
+.viewer.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Blurred background - clone of gallery behind */
+.viewer::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: inherit;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background-color: rgba(244, 243, 243, 0.6);
+    z-index: 0;
+}
+
+.viewer-track {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    transition: transform 0.4s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.viewer-slide {
+    min-width: 100vw;
+    flex-shrink: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.viewer-slide img {
+    max-width: 80vw;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.viewer-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 40px;
+    color: rgb(98, 98, 98);
+    user-select: none;
+    padding: 20px;
+    z-index: 2;
+    transition: color 0.2s ease;
+}
+
+.viewer-arrow:hover {
+    color: rgb(40, 40, 40);
+}
+
+.viewer-arrow.left {
+    left: 20px;
+}
+
+.viewer-arrow.right {
+    right: 20px;
+}
+
+.footer {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 100;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.footer.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+.footer a {
+    color: #aaa;
+    text-decoration: none;
+    font-size: 12px;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: #555;
+}
+
+.footer svg {
+    color: #aaa;
+    display: block;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover svg {
+    color: #555;
+}
