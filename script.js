@@ -1,5 +1,6 @@
 const gallery = document.getElementById("gallery");
 const viewer = document.getElementById("viewer");
+const titleContainer = document.getElementById("viewer-title-container");
 
 const cursor = document.getElementById("cursor");
 cursor.classList.add("custom-cursor");
@@ -116,6 +117,9 @@ function openProject(project) {
 
     viewer.appendChild(track);
 
+    titleContainer.textContent = project.name;
+    titleContainer.classList.add("active");
+
     const leftArrow = document.createElement("div");
     leftArrow.classList.add("viewer-arrow", "left");
     leftArrow.innerHTML = "‹";
@@ -175,6 +179,8 @@ document.addEventListener("keydown", e => {
 function closeViewer() {
     viewer.classList.remove("active");
     viewer.innerHTML = "";
+    titleContainer.textContent = "";
+    titleContainer.classList.remove("active");
 }
 
 viewer.addEventListener("click", (e) => {
@@ -215,20 +221,50 @@ if (window.innerWidth > 768) {
     }, { passive: false });
 }
 
+// --------------------
+// KEYBOARD GALLERY SCROLL
+// --------------------
+document.addEventListener("keydown", e => {
+    if (viewer.classList.contains("active")) return; // don't interfere with viewer
+
+    if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (isScrolling) return;
+        isScrolling = true;
+
+        const itemHeight = scrollContainer.clientHeight;
+        const currentSnap = Math.round(scrollContainer.scrollTop / itemHeight);
+        scrollContainer.scrollTo({
+            top: (currentSnap + 1) * itemHeight,
+            behavior: "smooth"
+        });
+
+        setTimeout(() => { isScrolling = false; }, 800);
+    }
+
+    if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (isScrolling) return;
+        isScrolling = true;
+
+        const itemHeight = scrollContainer.clientHeight;
+        const currentSnap = Math.round(scrollContainer.scrollTop / itemHeight);
+        scrollContainer.scrollTo({
+            top: (currentSnap - 1) * itemHeight,
+            behavior: "smooth"
+        });
+
+        setTimeout(() => { isScrolling = false; }, 800);
+    }
+});
 
 // --------------------
 // CONTACT PAGE
 // --------------------
-const contactPage = document.getElementById("contactPage");
-const contactClose = document.getElementById("contactClose");
 const headerContact = document.querySelector(".header-contact");
 
 headerContact.addEventListener("click", () => {
-    contactPage.classList.add("active");
-});
-
-contactClose.addEventListener("click", () => {
-    contactPage.classList.remove("active");
+    window.location.href = "contact.html";
 });
 
 // --------------------
@@ -240,7 +276,7 @@ scrollContainer.addEventListener("scroll", () => {
     const scrollBottom = scrollContainer.scrollTop + scrollContainer.clientHeight;
     const totalHeight = scrollContainer.scrollHeight;
 
-    if (scrollBottom >= totalHeight - scrollContainer.clientHeight) {
+    if (scrollBottom + 100 >= totalHeight) {
         footer.classList.add("visible");
     } else {
         footer.classList.remove("visible");
