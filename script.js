@@ -23,7 +23,7 @@ fetch("gallery.json")
 
         const img = document.createElement("img");
         img.src = project.cover;
-        img.loading = "lazy";
+        img.loading = "eager";
 
         imgWrapper.dataset.title = project.name;
 
