@@ -60,7 +60,7 @@ document.addEventListener("mousemove", e => {
 document.addEventListener("mouseover", e => {
     const imgWrapper = e.target.closest(".img-wrapper");
     const arrow = e.target.closest(".viewer-arrow");
-    const footerLink = e.target.closest("a, button");
+    const footerLink = e.target.closest("a, button, .header-inner");
 
     if (imgWrapper) {
         cursor.classList.add("hovering");
@@ -75,7 +75,7 @@ document.addEventListener("mouseover", e => {
 document.addEventListener("mouseout", e => {
     const imgWrapper = e.target.closest(".img-wrapper");
     const arrow = e.target.closest(".viewer-arrow");
-    const footerLink = e.target.closest("a, button");
+    const footerLink = e.target.closest("a, button, .header-inner");
 
     if (imgWrapper) {
         label.classList.remove("visible");
@@ -215,6 +215,21 @@ if (window.innerWidth > 768) {
     }, { passive: false });
 }
 
+
+// --------------------
+// CONTACT PAGE
+// --------------------
+const contactPage = document.getElementById("contactPage");
+const contactClose = document.getElementById("contactClose");
+const headerContact = document.querySelector(".header-contact");
+
+headerContact.addEventListener("click", () => {
+    contactPage.classList.add("active");
+});
+
+contactClose.addEventListener("click", () => {
+    contactPage.classList.remove("active");
+});
 
 // --------------------
 // SHOW FOOTER ON LAST ROW
