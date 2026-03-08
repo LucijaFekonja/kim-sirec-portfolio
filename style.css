@@ -1,10 +1,12 @@
 body {
     margin: 0;
     background-color: #f4f3f3;
+    font-family: "Bodoni Moda SC", serif;
 }
 
-.libertinus-mono-regular {
-  font-family: "Libertinus Mono", monospace;
+.bodoni-moda-sc {
+  font-family: "Bodoni Moda SC", serif;
+  font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
 }
@@ -37,6 +39,7 @@ body {
     font-weight: bold;
     line-height: 40px;
     transition: transform 0.4s ease;
+    color: #333;
 }
 
 .header-contact {
@@ -116,6 +119,13 @@ body {
     margin: 0;
 }
 
+.contact-break-line {
+
+    font-size: 14px;
+    color: #aaa;
+    margin: 0;
+}
+
 .contact-links {
     display: flex;
     flex-direction: column;
@@ -172,11 +182,56 @@ body {
     position: relative;
 }
 
+/* Down Arrow */
+.scroll-hint {
+    position: fixed;
+    bottom: 24px;
+    left: 50%; 
+    transform: translateX(-50%);
+    font-size: 24px;
+    color: #000000;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.scroll-hint.visible {
+    opacity: 0.3;
+}
+
+.img-dots {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.img-wrapper:hover .img-dots {
+    opacity: 1;
+}
+
+.img-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #bbb;
+    transition: background 0.2s ease;
+}
+
+.img-dot.active {
+    background: #555;
+}
+
 /* Overlay */
 .img-wrapper {
     position: relative;
     display: inline-flex;
     line-height: 0;
+    flex-direction: column;
+    align-items: center;
 }
 
 .img-wrapper img {
@@ -188,7 +243,7 @@ body {
 .img-wrapper:hover img {
     opacity: 0.25;
 }
-
+/* UNCOMMENT FOR FLOATING TITLE NEXT TO CURSOR
 .cursor-label {
     position: fixed;
     pointer-events: none;
@@ -201,6 +256,23 @@ body {
 }
 
 .cursor-label.visible {
+    opacity: 1;
+} */
+
+/* IMAGE CAPTION ON THE BOTTOM LEFT */
+.img-caption {
+    position: absolute;
+    bottom: 20px;
+    left: 8px;
+    font-size: 16px;
+    color: #222;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    line-height: 1.4;
+}
+
+.img-wrapper:hover .img-caption {
     opacity: 1;
 }
 
@@ -313,8 +385,8 @@ body {
     left: 0;
     width: 100%;
     text-align: center;
-    font-size: 13px;
-    color: #777;
+    font-size: 16px;
+    color: #333;
     pointer-events: none;
     z-index: 3000;
     opacity: 0;
@@ -369,7 +441,7 @@ body {
 
 @media (max-width: 768px) {
     .gallery {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .gallery-item {

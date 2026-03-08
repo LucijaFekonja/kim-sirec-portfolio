@@ -21,37 +21,66 @@ fetch("gallery.json")
         const imgWrapper = document.createElement("div");
         imgWrapper.classList.add("img-wrapper");
 
+        // Loading
         const img = document.createElement("img");
         img.src = project.cover;
         img.loading = "eager";
 
         imgWrapper.dataset.title = project.name;
 
+        // PROJECT NAME
+        const caption = document.createElement("div");
+        caption.classList.add("img-caption");
+        caption.textContent = project.name;
+        imgWrapper.appendChild(caption);
+
         imgWrapper.appendChild(img);
         wrapper.appendChild(imgWrapper);
 
-        imgWrapper.addEventListener("click", () => {
+        imgWrapper.addEventListener("click", (e) => {
+            if (e.target.closest(".img-dot")) return;
             openProject(project);
         });
 
         gallery.appendChild(wrapper);
-    });
 
+        // Little dots
+        if (project.images.length > 1) {
+            const dots = document.createElement("div");
+            dots.classList.add("img-dots");
+
+            project.images.forEach((_, i) => {
+                const dot = document.createElement("span");
+                dot.classList.add("img-dot");
+                if (i === 0) dot.classList.add("active");
+                dot.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    img.src = project.images[i];
+                    dots.querySelectorAll(".img-dot").forEach(d => d.classList.remove("active"));
+                    dot.classList.add("active")
+                });
+                dots.appendChild(dot);
+            });
+        
+            imgWrapper.appendChild(dots);
+        }
+    });
 });
 
 
 // --------------------
 // CUSTOM CURSOR + FLOATING LABEL
 // --------------------
-const label = document.createElement("div");
-label.classList.add("cursor-label");
-document.body.appendChild(label);
+// UNCOMMENT FOR FLOATING LABEL NEXT TO CURSOR
+// const label = document.createElement("div");
+// label.classList.add("cursor-label");
+// document.body.appendChild(label);
 
 document.addEventListener("mousemove", e => {
     cursor.style.left = e.clientX + "px";
     cursor.style.top = e.clientY + "px";
-    label.style.left = (e.clientX + 16) + "px";
-    label.style.top = (e.clientY - 8) + "px";
+    // label.style.left = (e.clientX + 16) + "px";
+    // label.style.top = (e.clientY - 8) + "px";
 });
 
 
@@ -62,15 +91,21 @@ document.addEventListener("mouseover", e => {
     const imgWrapper = e.target.closest(".img-wrapper");
     const arrow = e.target.closest(".viewer-arrow");
     const footerLink = e.target.closest("a, button, .header-inner");
+    const dot = e.target.closest(".img-dot");
 
-    if (imgWrapper) {
-        cursor.classList.add("hovering");
-        const parts = imgWrapper.dataset.title.split(": ");
-        label.innerHTML = parts[0] + ":<br>" + (parts[1] || "");
-        label.classList.add("visible");
-    } else if (arrow || footerLink) {
+    if (imgWrapper || arrow || footerLink || dot ) {
         cursor.classList.add("hovering");
     }
+
+    // FLOATING LABEL NEXT TO CURSOR
+    // if (imgWrapper) {
+    //     cursor.classList.add("hovering");
+    //     const parts = imgWrapper.dataset.title.split(": ");
+    //     label.innerHTML = parts[0] + ":<br>" + (parts[1] || "");
+    //     label.classList.add("visible");
+    // } else if (arrow || footerLink) {
+    //     cursor.classList.add("hovering");
+    // }
 });
 
 document.addEventListener("mouseout", e => {
@@ -78,12 +113,18 @@ document.addEventListener("mouseout", e => {
     const arrow = e.target.closest(".viewer-arrow");
     const footerLink = e.target.closest("a, button, .header-inner");
 
-    if (imgWrapper) {
-        label.classList.remove("visible");
-    }
-    if (imgWrapper || arrow || footerLink) {
+
+    if (imgWrapper || arrow || footerLink || dot) {
         cursor.classList.remove("hovering");
     }
+
+    // FLOATING LABEL NEXT TO CURSOR
+    // if (imgWrapper) {
+    //     label.classList.remove("visible");
+    // }
+    // if (imgWrapper || arrow || footerLink) {
+    //     cursor.classList.remove("hovering");
+    // }
 });
 
 
@@ -94,12 +135,12 @@ let currentIndex = 0;
 let currentImages = [];
 let track;
 
-function openProject(project) {
+function openProject(project, startIndex = 0) {
     viewer.innerHTML = "";
     viewer.classList.add("active");
 
     currentImages = project.images;
-    currentIndex = 0;
+    currentIndex = startIndex;
 
     track = document.createElement("div");
     track.classList.add("viewer-track");
@@ -282,3 +323,20 @@ scrollContainer.addEventListener("scroll", () => {
         footer.classList.remove("visible");
     }
 });
+
+// --------------------
+// SCROLL HINT ARROW
+// --------------------
+const scrollHint = document.getElementById("scrollHint");
+
+scrollContainer.addEventListener("scroll", () => {
+    console.log(scrollContainer.scrollTop);
+    if (scrollContainer.scrollTop < 50) {
+        scrollHint.classList.add("visible");
+    } else {
+        scrollHint.classList.remove("visible");
+    }
+});
+
+// show on load
+scrollHint.classList.add("visible");
