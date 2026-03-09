@@ -14,57 +14,51 @@ fetch("gallery.json")
 .then(projects => {
 
     projects.forEach(project => {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("gallery-item");
 
-        const wrapper = document.createElement("div");
-        wrapper.classList.add("gallery-item");
+    const card = document.createElement("div");
+    card.classList.add("project-card");
 
-        const imgWrapper = document.createElement("div");
-        imgWrapper.classList.add("img-wrapper");
+    const img = document.createElement("img");
+    img.src = project.cover;
+    img.loading = "eager";
+    img.classList.add("project-img");
 
-        // Loading
-        const img = document.createElement("img");
-        img.src = project.cover;
-        img.loading = "eager";
+    const caption = document.createElement("div");
+    caption.classList.add("img-caption");
+    caption.textContent = project.name;
 
-        imgWrapper.dataset.title = project.name;
+    const dots = document.createElement("div");
+    dots.classList.add("img-dots");
 
-        // PROJECT NAME
-        const caption = document.createElement("div");
-        caption.classList.add("img-caption");
-        caption.textContent = project.name;
-        imgWrapper.appendChild(caption);
-
-        imgWrapper.appendChild(img);
-        wrapper.appendChild(imgWrapper);
-
-        imgWrapper.addEventListener("click", (e) => {
-            if (e.target.closest(".img-dot")) return;
-            openProject(project);
-        });
-
-        gallery.appendChild(wrapper);
-
-        // Little dots
-        if (project.images.length > 1) {
-            const dots = document.createElement("div");
-            dots.classList.add("img-dots");
-
-            project.images.forEach((_, i) => {
-                const dot = document.createElement("span");
-                dot.classList.add("img-dot");
-                if (i === 0) dot.classList.add("active");
-                dot.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    img.src = project.images[i];
-                    dots.querySelectorAll(".img-dot").forEach(d => d.classList.remove("active"));
-                    dot.classList.add("active")
-                });
-                dots.appendChild(dot);
+    if (project.images.length > 1) {
+        project.images.forEach((_, i) => {
+            const dot = document.createElement("span");
+            dot.classList.add("img-dot");
+            if (i === 0) dot.classList.add("active");
+            dot.addEventListener("click", (e) => {
+                e.stopPropagation();
+                img.src = project.images[i];
+                dots.querySelectorAll(".img-dot").forEach(d => d.classList.remove("active"));
+                dot.classList.add("active");
             });
-        
-            imgWrapper.appendChild(dots);
-        }
+            dots.appendChild(dot);
+        });
+    }
+
+    img.addEventListener("click", () => {
+        openProject(project);
     });
+
+    card.appendChild(img);
+    card.appendChild(caption);
+    card.appendChild(dots);
+    wrapper.appendChild(card);
+    gallery.appendChild(wrapper);
+});
+        
+    
 });
 
 
@@ -88,12 +82,12 @@ document.addEventListener("mousemove", e => {
 // CURSOR HOVER STATES
 // --------------------
 document.addEventListener("mouseover", e => {
-    const imgWrapper = e.target.closest(".img-wrapper");
+    const card = e.target.closest(".project-img");
     const arrow = e.target.closest(".viewer-arrow");
-    const footerLink = e.target.closest("a, button, .header-inner");
+    const footerLink = e.target.closest("a, button, .header-inner, .mobile-contact-btn");
     const dot = e.target.closest(".img-dot");
 
-    if (imgWrapper || arrow || footerLink || dot ) {
+    if (card || arrow || footerLink || dot) {
         cursor.classList.add("hovering");
     }
 
@@ -109,14 +103,15 @@ document.addEventListener("mouseover", e => {
 });
 
 document.addEventListener("mouseout", e => {
-    const imgWrapper = e.target.closest(".img-wrapper");
+    const card = e.target.closest(".project-img");
     const arrow = e.target.closest(".viewer-arrow");
     const footerLink = e.target.closest("a, button, .header-inner");
+    const dot = e.target.closest(".img-dot");
 
-
-    if (imgWrapper || arrow || footerLink || dot) {
+    if (card || arrow || footerLink || dot) {
         cursor.classList.remove("hovering");
     }
+    
 
     // FLOATING LABEL NEXT TO CURSOR
     // if (imgWrapper) {
@@ -185,6 +180,12 @@ function openProject(project, startIndex = 0) {
 
 function updateSlide() {
     track.style.transform = `translateX(-${currentIndex * 100}vw)`;
+
+    const leftArrow = viewer.querySelector(".viewer-arrow.left");
+    const rightArrow = viewer.querySelector(".viewer-arrow.right");
+
+    if (leftArrow) leftArrow.style.opacity = currentIndex === 0 ? "0" : "1";
+    if (rightArrow) rightArrow.style.opacity = currentIndex === currentImages.length - 1 ? "0" : "1";
 }
 
 function nextSlide() {
@@ -212,6 +213,34 @@ document.addEventListener("keydown", e => {
     if (e.key === "ArrowLeft") prevSlide();
     if (e.key === "Escape") closeViewer();
 });
+
+
+// --------------------
+// TRACKPAD SWIPE IN VIEWER
+// --------------------
+let touchStartX = 0;
+
+viewer.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+}, { passive: true });
+
+viewer.addEventListener("touchend", (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+        if (diff > 0) nextSlide();
+        else prevSlide();
+    }
+}, { passive: true });
+
+// Trackpad horizontal swipe
+viewer.addEventListener("wheel", (e) => {
+    if (!viewer.classList.contains("active")) return;
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        e.preventDefault();
+        if (e.deltaX > 30) nextSlide();
+        else if (e.deltaX < -30) prevSlide();
+    }
+}, { passive: false });
 
 
 // --------------------
