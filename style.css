@@ -448,6 +448,14 @@ body {
 
 @media (max-width: 768px) {
 
+    * {
+        cursor: auto;
+    }
+
+    .custom-cursor {
+        display: none;
+    }
+
     .gallery-container {
         scroll-snap-type: none;
         height: 100vh;
@@ -484,6 +492,14 @@ body {
         object-fit: cover;
     }
 
+    .project-card:hover .project-img {
+        opacity: 1;
+    }
+    
+    .img-caption {
+        display: none;
+    }
+    
     /* always show dots and caption on mobile */
     .img-dots {
         opacity: 1;
@@ -538,10 +554,13 @@ body {
         opacity: 1;
     }
 
-    /* hide desktop footer */
     .footer {
         display: flex;
-        z-index: 100;
+        position: fixed;
+        bottom: 20px;
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: all;
     }
 
     /* hide scroll hint */

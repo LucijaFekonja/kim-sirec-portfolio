@@ -14,6 +14,8 @@ fetch("gallery.json")
 .then(projects => {
 
     projects.forEach(project => {
+    let currentDotIndex = 0;
+
     const wrapper = document.createElement("div");
     wrapper.classList.add("gallery-item");
 
@@ -39,6 +41,7 @@ fetch("gallery.json")
             if (i === 0) dot.classList.add("active");
             dot.addEventListener("click", (e) => {
                 e.stopPropagation();
+                currentDotIndex = i;
                 img.src = project.images[i];
                 dots.querySelectorAll(".img-dot").forEach(d => d.classList.remove("active"));
                 dot.classList.add("active");
@@ -48,7 +51,7 @@ fetch("gallery.json")
     }
 
     img.addEventListener("click", () => {
-        openProject(project);
+        openProject(project, currentDotIndex);
     });
 
     card.appendChild(img);
