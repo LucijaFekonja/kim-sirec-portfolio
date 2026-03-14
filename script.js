@@ -1,222 +1,103 @@
-const gallery = document.getElementById("gallery");
-const viewer = document.getElementById("viewer");
-const titleContainer = document.getElementById("viewer-title-container");
-
-const cursor = document.getElementById("cursor");
-cursor.classList.add("custom-cursor");
-document.body.appendChild(cursor);
+const scrollContainer = document.getElementById("scrollContainer");
+const viewer          = document.getElementById("viewer");
+const titleContainer  = document.getElementById("viewer-title-container");
+const cursor          = document.getElementById("cursor");
+const footer          = document.querySelector(".footer");
+const scrollHint      = document.getElementById("scrollHint");
 
 // --------------------
-// LOAD PROJECT DATA
+// CUSTOM CURSOR
 // --------------------
-fetch("gallery.json")
-.then(res => res.json())
-.then(projects => {
-
-    projects.forEach(project => {
-    let currentDotIndex = 0;
-
-    const wrapper = document.createElement("div");
-    wrapper.classList.add("gallery-item");
-
-    const card = document.createElement("div");
-    card.classList.add("project-card");
-
-    const img = document.createElement("img");
-    img.src = project.cover;
-    img.loading = "eager";
-    img.classList.add("project-img");
-
-    const caption = document.createElement("div");
-    caption.classList.add("img-caption");
-    caption.textContent = project.name;
-
-    const dots = document.createElement("div");
-    dots.classList.add("img-dots");
-
-    if (project.images.length > 1) {
-        project.images.forEach((_, i) => {
-            const dot = document.createElement("span");
-            dot.classList.add("img-dot");
-            if (i === 0) dot.classList.add("active");
-            dot.addEventListener("click", (e) => {
-                e.stopPropagation();
-                currentDotIndex = i;
-                img.src = project.images[i];
-                dots.querySelectorAll(".img-dot").forEach(d => d.classList.remove("active"));
-                dot.classList.add("active");
-            });
-            dots.appendChild(dot);
-        });
-    }
-
-    img.addEventListener("click", () => {
-        openProject(project, currentDotIndex);
-    });
-
-    card.appendChild(img);
-    card.appendChild(caption);
-    card.appendChild(dots);
-    wrapper.appendChild(card);
-    gallery.appendChild(wrapper);
-});
-        
-    
+document.addEventListener("mousemove", (e) => {
+  cursor.style.left = e.clientX + "px";
+  cursor.style.top  = e.clientY + "px";
 });
 
-
-// --------------------
-// CUSTOM CURSOR + FLOATING LABEL
-// --------------------
-// UNCOMMENT FOR FLOATING LABEL NEXT TO CURSOR
-// const label = document.createElement("div");
-// label.classList.add("cursor-label");
-// document.body.appendChild(label);
-
-document.addEventListener("mousemove", e => {
-    cursor.style.left = e.clientX + "px";
-    cursor.style.top = e.clientY + "px";
-    // label.style.left = (e.clientX + 16) + "px";
-    // label.style.top = (e.clientY - 8) + "px";
-});
-
-
-// --------------------
-// CURSOR HOVER STATES
-// --------------------
-document.addEventListener("mouseover", e => {
-    const card = e.target.closest(".project-img");
-    const arrow = e.target.closest(".viewer-arrow");
-    const footerLink = e.target.closest("a, button, .header-inner, .mobile-contact-btn");
-    const dot = e.target.closest(".img-dot");
-
-    if (card || arrow || footerLink || dot) {
-        cursor.classList.add("hovering");
-    }
-
-    // FLOATING LABEL NEXT TO CURSOR
-    // if (imgWrapper) {
-    //     cursor.classList.add("hovering");
-    //     const parts = imgWrapper.dataset.title.split(": ");
-    //     label.innerHTML = parts[0] + ":<br>" + (parts[1] || "");
-    //     label.classList.add("visible");
-    // } else if (arrow || footerLink) {
-    //     cursor.classList.add("hovering");
-    // }
-});
-
-document.addEventListener("mouseout", e => {
-    const card = e.target.closest(".project-img");
-    const arrow = e.target.closest(".viewer-arrow");
-    const footerLink = e.target.closest("a, button, .header-inner");
-    const dot = e.target.closest(".img-dot");
-
-    if (card || arrow || footerLink || dot) {
-        cursor.classList.remove("hovering");
-    }
-    
-
-    // FLOATING LABEL NEXT TO CURSOR
-    // if (imgWrapper) {
-    //     label.classList.remove("visible");
-    // }
-    // if (imgWrapper || arrow || footerLink) {
-    //     cursor.classList.remove("hovering");
-    // }
-});
-
+function isCursorTarget(el) {
+  return el.closest(".project-card, .viewer-arrow, a, button, .header-inner, .img-dot");
+}
+document.addEventListener("mouseover", (e) => { if (isCursorTarget(e.target)) cursor.classList.add("hovering"); });
+document.addEventListener("mouseout",  (e) => { if (isCursorTarget(e.target)) cursor.classList.remove("hovering"); });
 
 // --------------------
 // OPEN PROJECT VIEWER
 // --------------------
-let currentIndex = 0;
+let currentIndex  = 0;
 let currentImages = [];
-let track;
+let viewerTrack;
 
 function openProject(project, startIndex = 0) {
-    viewer.innerHTML = "";
-    viewer.classList.add("active");
+  viewer.innerHTML = "";
+  viewer.classList.add("active");
+  currentImages = project.images;
+  currentIndex  = startIndex;
 
-    currentImages = project.images;
-    currentIndex = startIndex;
+  viewerTrack = document.createElement("div");
+  viewerTrack.classList.add("viewer-track");
 
-    track = document.createElement("div");
-    track.classList.add("viewer-track");
+  currentImages.forEach((src) => {
+    const slide = document.createElement("div");
+    slide.classList.add("viewer-slide");
+    const img = document.createElement("img");
+    img.src = src;
+    slide.appendChild(img);
+    viewerTrack.appendChild(slide);
+  });
 
-    currentImages.forEach(src => {
-        const slide = document.createElement("div");
-        slide.classList.add("viewer-slide");
+  viewer.appendChild(viewerTrack);
+  titleContainer.textContent = project.name;
+  titleContainer.classList.add("active");
 
-        const img = document.createElement("img");
-        img.src = src;
+  const leftArrow = document.createElement("div");
+  leftArrow.classList.add("viewer-arrow", "left");
+  leftArrow.innerHTML = "&#8249;";
+  leftArrow.addEventListener("click", (e) => { e.stopPropagation(); prevSlide(); });
 
-        slide.appendChild(img);
-        track.appendChild(slide);
-    });
+  const rightArrow = document.createElement("div");
+  rightArrow.classList.add("viewer-arrow", "right");
+  rightArrow.innerHTML = "&#8250;";
+  rightArrow.addEventListener("click", (e) => { e.stopPropagation(); nextSlide(); });
 
-    viewer.appendChild(track);
-
-    titleContainer.textContent = project.name;
-    titleContainer.classList.add("active");
-
-    const leftArrow = document.createElement("div");
-    leftArrow.classList.add("viewer-arrow", "left");
-    leftArrow.innerHTML = "‹";
-    leftArrow.addEventListener("click", (e) => {
-        e.stopPropagation();
-        prevSlide();
-    });
-
-    const rightArrow = document.createElement("div");
-    rightArrow.classList.add("viewer-arrow", "right");
-    rightArrow.innerHTML = "›";
-    rightArrow.addEventListener("click", (e) => {
-        e.stopPropagation();
-        nextSlide();
-    });
-
-    viewer.appendChild(leftArrow);
-    viewer.appendChild(rightArrow);
-
-    updateSlide();
+  viewer.appendChild(leftArrow);
+  viewer.appendChild(rightArrow);
+  updateViewerSlide();
 }
 
-function updateSlide() {
-    track.style.transform = `translateX(-${currentIndex * 100}vw)`;
-
-    const leftArrow = viewer.querySelector(".viewer-arrow.left");
-    const rightArrow = viewer.querySelector(".viewer-arrow.right");
-
-    if (leftArrow) leftArrow.style.opacity = currentIndex === 0 ? "0" : "1";
-    if (rightArrow) rightArrow.style.opacity = currentIndex === currentImages.length - 1 ? "0" : "1";
+function updateViewerSlide() {
+  if (!viewerTrack) return;
+  viewerTrack.style.transform = `translateX(-${currentIndex * 100}vw)`;
+  const l = viewer.querySelector(".viewer-arrow.left");
+  const r = viewer.querySelector(".viewer-arrow.right");
+  if (l) l.style.opacity = currentIndex === 0 ? "0" : "1";
+  if (r) r.style.opacity = currentIndex === currentImages.length - 1 ? "0" : "1";
 }
 
-function nextSlide() {
-    if (currentIndex < currentImages.length - 1) {
-        currentIndex++;
-        updateSlide();
-    }
+function nextSlide() { if (currentIndex < currentImages.length - 1) { currentIndex++; updateViewerSlide(); } }
+function prevSlide() { if (currentIndex > 0) { currentIndex--; updateViewerSlide(); } }
+
+// --------------------
+// CLOSE VIEWER
+// --------------------
+function closeViewer() {
+  viewer.classList.remove("active");
+  viewer.innerHTML = "";
+  titleContainer.textContent = "";
+  titleContainer.classList.remove("active");
 }
 
-function prevSlide() {
-    if (currentIndex > 0) {
-        currentIndex--;
-        updateSlide();
-    }
-}
-
-
-// --------------------------
-// KEYBOARD NAVIGATION
-// --------------------------
-document.addEventListener("keydown", e => {
-    if (!viewer.classList.contains("active")) return;
-
-    if (e.key === "ArrowRight") nextSlide();
-    if (e.key === "ArrowLeft") prevSlide();
-    if (e.key === "Escape") closeViewer();
+viewer.addEventListener("click", (e) => {
+  if (!e.target.closest(".viewer-slide img") && !e.target.closest(".viewer-arrow")) closeViewer();
 });
 
+// --------------------
+// KEYBOARD NAVIGATION
+// --------------------
+document.addEventListener("keydown", (e) => {
+  if (!viewer.classList.contains("active")) return;
+  if (e.key === "ArrowRight") nextSlide();
+  if (e.key === "ArrowLeft")  prevSlide();
+  if (e.key === "Escape")     closeViewer();
+});
 
 // --------------------
 // TRACKPAD SWIPE IN VIEWER
@@ -224,151 +105,206 @@ document.addEventListener("keydown", e => {
 let touchStartX = 0;
 
 viewer.addEventListener("touchstart", (e) => {
-    touchStartX = e.touches[0].clientX;
+  touchStartX = e.touches[0].clientX;
 }, { passive: true });
 
 viewer.addEventListener("touchend", (e) => {
-    const diff = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) {
-        if (diff > 0) nextSlide();
-        else prevSlide();
-    }
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) diff > 0 ? nextSlide() : prevSlide();
 }, { passive: true });
 
-// Trackpad horizontal swipe
 viewer.addEventListener("wheel", (e) => {
-    if (!viewer.classList.contains("active")) return;
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-        e.preventDefault();
-        if (e.deltaX > 30) nextSlide();
-        else if (e.deltaX < -30) prevSlide();
-    }
+  if (!viewer.classList.contains("active")) return;
+  if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+    e.preventDefault();
+    if (e.deltaX > 30) nextSlide();
+    else if (e.deltaX < -30) prevSlide();
+  }
 }, { passive: false });
-
-
-// --------------------
-// CLOSE VIEWER
-// --------------------
-function closeViewer() {
-    viewer.classList.remove("active");
-    viewer.innerHTML = "";
-    titleContainer.textContent = "";
-    titleContainer.classList.remove("active");
-}
-
-viewer.addEventListener("click", (e) => {
-    if (!e.target.closest(".viewer-slide img") &&
-        !e.target.closest(".viewer-arrow")) {
-        closeViewer();
-    }
-});
-
 
 // --------------------
 // SMOOTH SCROLL SNAP (desktop only)
 // --------------------
-const scrollContainer = document.getElementById("scrollContainer");
 let isScrolling = false;
 
 if (window.innerWidth > 768) {
-    scrollContainer.addEventListener("wheel", (e) => {
-        e.preventDefault();
-
-        if (isScrolling) return;
-        isScrolling = true;
-
-        const direction = e.deltaY > 0 ? 1 : -1;
-        const itemHeight = scrollContainer.clientHeight;
-        const currentSnap = Math.round(scrollContainer.scrollTop / itemHeight);
-        const targetScrollTop = (currentSnap + direction) * itemHeight;
-
-        scrollContainer.scrollTo({
-            top: targetScrollTop,
-            behavior: "smooth"
-        });
-
-        setTimeout(() => {
-            isScrolling = false;
-        }, 800);
-
-    }, { passive: false });
+  scrollContainer.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    if (isScrolling) return;
+    isScrolling = true;
+    const dir  = e.deltaY > 0 ? 1 : -1;
+    const h    = scrollContainer.clientHeight;
+    const snap = Math.round(scrollContainer.scrollTop / h);
+    scrollContainer.scrollTo({ top: (snap + dir) * h, behavior: "smooth" });
+    setTimeout(() => { isScrolling = false; }, 800);
+  }, { passive: false });
 }
 
 // --------------------
 // KEYBOARD GALLERY SCROLL
 // --------------------
-document.addEventListener("keydown", e => {
-    if (viewer.classList.contains("active")) return; // don't interfere with viewer
-
-    if (e.key === "ArrowDown") {
-        e.preventDefault();
-        if (isScrolling) return;
-        isScrolling = true;
-
-        const itemHeight = scrollContainer.clientHeight;
-        const currentSnap = Math.round(scrollContainer.scrollTop / itemHeight);
-        scrollContainer.scrollTo({
-            top: (currentSnap + 1) * itemHeight,
-            behavior: "smooth"
-        });
-
-        setTimeout(() => { isScrolling = false; }, 800);
-    }
-
-    if (e.key === "ArrowUp") {
-        e.preventDefault();
-        if (isScrolling) return;
-        isScrolling = true;
-
-        const itemHeight = scrollContainer.clientHeight;
-        const currentSnap = Math.round(scrollContainer.scrollTop / itemHeight);
-        scrollContainer.scrollTo({
-            top: (currentSnap - 1) * itemHeight,
-            behavior: "smooth"
-        });
-
-        setTimeout(() => { isScrolling = false; }, 800);
-    }
-});
-
-// --------------------
-// CONTACT PAGE
-// --------------------
-const headerContact = document.querySelector(".header-contact");
-
-headerContact.addEventListener("click", () => {
-    window.location.href = "contact.html";
+document.addEventListener("keydown", (e) => {
+  if (viewer.classList.contains("active")) return;
+  if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+  e.preventDefault();
+  if (isScrolling) return;
+  isScrolling = true;
+  const h    = scrollContainer.clientHeight;
+  const snap = Math.round(scrollContainer.scrollTop / h);
+  const dir  = e.key === "ArrowDown" ? 1 : -1;
+  scrollContainer.scrollTo({ top: (snap + dir) * h, behavior: "smooth" });
+  setTimeout(() => { isScrolling = false; }, 800);
 });
 
 // --------------------
 // SHOW FOOTER ON LAST ROW
 // --------------------
-const footer = document.querySelector(".footer");
+// --------------------
+// SCROLL POSITION TRACKING
+// --------------------
+// On mobile, body scrolls. On desktop, #scrollContainer scrolls.
+function onScroll() {
+  const scrollTop = isMobile ? window.scrollY : scrollContainer.scrollTop;
+  const atTop     = scrollTop < 50;
+  scrollHint.classList.toggle("visible", atTop);
+}
 
-scrollContainer.addEventListener("scroll", () => {
-    const scrollBottom = scrollContainer.scrollTop + scrollContainer.clientHeight;
-    const totalHeight = scrollContainer.scrollHeight;
-
-    if (scrollBottom + 100 >= totalHeight) {
-        footer.classList.add("visible");
-    } else {
-        footer.classList.remove("visible");
-    }
-});
+scrollContainer.addEventListener("scroll", onScroll);
+window.addEventListener("scroll", onScroll);
 
 // --------------------
 // SCROLL HINT ARROW
 // --------------------
-const scrollHint = document.getElementById("scrollHint");
+scrollHint.classList.add("visible");
 
-scrollContainer.addEventListener("scroll", () => {
-    console.log(scrollContainer.scrollTop);
-    if (scrollContainer.scrollTop < 50) {
-        scrollHint.classList.add("visible");
-    } else {
-        scrollHint.classList.remove("visible");
-    }
+// --------------------
+// CONTACT PAGE
+// --------------------
+document.querySelector(".header-contact").addEventListener("click", () => {
+  window.location.href = "contact.html";
 });
 
-// show on load
-scrollHint.classList.add("visible");
+// --------------------
+// OFFSET HELPER
+// --------------------
+// Desktop: offsetPortrait (photo taller than wide) or offsetLandscape (wider than tall)
+// Mobile:  offsetMobile (single offset, ignores aspect ratio)
+const isMobile = window.innerWidth <= 768;
+
+function pickOffset(naturalW, naturalH, project) {
+  if (isMobile) return project.offsetMobile || { x: 0, y: 0 };
+  const isPortraitPhoto = naturalH > naturalW;
+  return isPortraitPhoto
+    ? (project.offsetPortrait  || project.offsetLandscape || { x: 0, y: 0 })
+    : (project.offsetLandscape || { x: 0, y: 0 });
+}
+
+// --------------------
+// LOAD PROJECT DATA
+// --------------------
+fetch("gallery.json")
+  .then((r) => r.json())
+  .then((projects) => {
+    // Group into pairs — each pair = one scroll-snap section
+    for (let i = 0; i < projects.length; i += 2) {
+      const pair    = projects.slice(i, i + 2);
+      const section = document.createElement("div");
+      section.classList.add("gallery-section");
+      if (isMobile) {
+        // Use the first project's heightMobile if defined, fallback to 55vh
+        const h = pair[0].heightMobile || pair[1]?.heightMobile || "55vh";
+        section.style.height = h;
+      }
+
+      pair.forEach((project, pairIdx) => {
+        const baseCX = isMobile
+          ? (pairIdx === 0 ? window.innerWidth * 0.25 : window.innerWidth * 0.75)
+          : (pairIdx === 0 ? window.innerWidth * 0.27 : window.innerWidth * 0.73);
+        const baseCY = window.innerHeight * 0.5;
+
+        const card = document.createElement("div");
+        card.classList.add("project-card");
+        card.style.position  = "absolute";
+        card.style.transform = "translate(-50%, -50%)";
+        card.style.left      = `${baseCX}px`;
+        card.style.top       = `${baseCY}px`;
+
+        // Image wrapper
+        const wrap = document.createElement("div");
+        wrap.classList.add("project-img-wrap");
+        if (!isMobile && project.maxWidth)  wrap.style.maxWidth  = project.maxWidth;
+        if (!isMobile && project.maxHeight) wrap.style.maxHeight = project.maxHeight;
+
+        const img = document.createElement("img");
+        img.classList.add("project-img");
+        img.alt = project.name;
+        if (!isMobile && project.maxWidth)  img.style.maxWidth  = project.maxWidth;
+        if (!isMobile && project.maxHeight) img.style.maxHeight = project.maxHeight;
+
+        // Position card once cover loads — use photo's own aspect ratio
+        img.addEventListener("load", () => {
+          const off = pickOffset(img.naturalWidth, img.naturalHeight, project);
+          card.style.left = `${baseCX + off.x}px`;
+          card.style.top  = `${baseCY + off.y}px`;
+        });
+        img.src = project.cover; // set AFTER attaching load listener
+
+        // Caption
+        const caption = document.createElement("span");
+        caption.classList.add("img-caption");
+        caption.textContent = project.name;
+
+        wrap.appendChild(img);
+        wrap.appendChild(caption);
+
+        // Dots
+        const dotsEl = document.createElement("div");
+        dotsEl.classList.add("img-dots");
+
+        let activeDotIndex = 0;
+
+        project.images.forEach((src, idx) => {
+          const dot = document.createElement("div");
+          dot.classList.add("img-dot");
+          if (idx === 0) dot.classList.add("active");
+
+          dot.addEventListener("click", (e) => {
+            e.stopPropagation();
+            activeDotIndex = idx;
+            dotsEl.querySelectorAll(".img-dot").forEach((d, di) => {
+              d.classList.toggle("active", di === idx);
+            });
+            // Probe new image's dimensions before swapping so card repositions correctly
+            const probe = new Image();
+            probe.onload = () => {
+              img.src = src;
+              const off = pickOffset(probe.naturalWidth, probe.naturalHeight, project);
+              card.style.left = `${baseCX + off.x}px`;
+              card.style.top  = `${baseCY + off.y}px`;
+            };
+            probe.src = src;
+          });
+
+          dotsEl.appendChild(dot);
+        });
+
+        card.appendChild(wrap);
+        card.appendChild(dotsEl);
+
+        card.addEventListener("click", (e) => {
+          if (e.target.closest(".img-dot")) return;
+          openProject(project, activeDotIndex);
+        });
+
+        section.appendChild(card);
+      });
+
+      scrollContainer.appendChild(section);
+    }
+
+    // Place footer inside the last section so it's absolutely positioned
+    // at the bottom of the last row — visible only when scrolled there
+    const lastSection = scrollContainer.querySelector(".gallery-section:last-child");
+    if (lastSection) lastSection.appendChild(footer);
+  })
+  .catch((err) => console.error("Could not load gallery.json:", err));
