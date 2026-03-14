@@ -200,10 +200,39 @@ function pickOffset(naturalW, naturalH, project) {
 }
 
 // --------------------
+// LOADER
+// --------------------
+const loader = document.getElementById("loader");
+
+function showLoader() { loader.classList.add("active"); }
+function hideLoader() { loader.classList.remove("active"); }
+
+function preloadImages(urls) {
+  const bar = document.getElementById("loaderBar");
+  let loaded = 0;
+  return Promise.all(urls.map(src => new Promise(resolve => {
+    const img = new Image();
+    img.onload = img.onerror = () => {
+      loaded++;
+      if (bar) bar.style.width = `${Math.round((loaded / urls.length) * 100)}%`;
+      resolve();
+    };
+    img.src = src;
+  })));
+}
+
+// --------------------
 // LOAD PROJECT DATA
 // --------------------
+showLoader();
+
 fetch("gallery.json")
   .then((r) => r.json())
+  .then((projects) => {
+    // Preload all cover images before building the gallery
+    const covers = projects.map(p => p.cover);
+    return preloadImages(covers).then(() => projects);
+  })
   .then((projects) => {
     // Group into pairs — each pair = one scroll-snap section
     for (let i = 0; i < projects.length; i += 2) {
@@ -306,5 +335,7 @@ fetch("gallery.json")
     // at the bottom of the last row — visible only when scrolled there
     const lastSection = scrollContainer.querySelector(".gallery-section:last-child");
     if (lastSection) lastSection.appendChild(footer);
+
+    hideLoader();
   })
   .catch((err) => console.error("Could not load gallery.json:", err));
