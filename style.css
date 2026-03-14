@@ -97,6 +97,89 @@ body {
     display: none;
 }
 
+.contact-x {
+  position: fixed;
+  top: 50px;
+  right: 55px;
+  z-index: 4000;
+  text-decoration: none;
+  line-height: 0;
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
+}
+ 
+.contact-x:hover {
+  opacity: 1;
+}
+ 
+/* ── CONTACT PAGE ── */
+.contact-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+ 
+.contact-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+ 
+.contact-name {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+  font-family: "Red Hat Text", sans-serif;
+}
+ 
+.contact-bio {
+  font-size: 13px;
+  color: #aaa;
+  margin: 0;
+}
+ 
+.contact-break-line {
+  font-size: 13px;
+  color: #ddd;
+  margin: 0;
+  letter-spacing: 4px;
+}
+ 
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+ 
+.contact-links a {
+  color: #aaa;
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.2s ease;
+  display: block;
+}
+ 
+.contact-links a:hover {
+  color: #555;
+}
+ 
+.contact-links svg {
+  color: #aaa;
+  display: block;
+  transition: color 0.2s ease;
+}
+ 
+.contact-links a:hover svg {
+  color: #555;
+}
+
 .gallery-section {
   height: 100vh;
   width: 100%;
@@ -362,6 +445,13 @@ body {
     height: auto;
     overflow-y: visible;
     scroll-snap-type: none;
+  }
+  .contact-x {
+    top: 20px;
+    right: 20px;
+  }
+  .contact-name {
+    font-size: 24px;
   }
   .gallery-section {
     height: 55vh; /* default; overridden per-section by heightMobile in gallery.json */

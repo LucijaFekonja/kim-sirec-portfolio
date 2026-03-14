@@ -203,18 +203,19 @@ function pickOffset(naturalW, naturalH, project) {
 // LOADER
 // --------------------
 const loader = document.getElementById("loader");
-
+ 
 function showLoader() { loader.classList.add("active"); }
 function hideLoader() { loader.classList.remove("active"); }
-
+ 
 function preloadImages(urls) {
   const bar = document.getElementById("loaderBar");
   let loaded = 0;
+  const total = urls.length;
   return Promise.all(urls.map(src => new Promise(resolve => {
     const img = new Image();
     img.onload = img.onerror = () => {
       loaded++;
-      if (bar) bar.style.width = `${Math.round((loaded / urls.length) * 100)}%`;
+      if (bar) bar.style.width = `${Math.round((loaded / total) * 100)}%`;
       resolve();
     };
     img.src = src;
