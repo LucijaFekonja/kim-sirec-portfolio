@@ -422,8 +422,13 @@ fetch("gallery.json")
     }
 
     const lastSection = scrollContainer.querySelector(".gallery-section:last-child");
-    if (lastSection && !isMobile) lastSection.appendChild(footer);
 
+    if (isMobile) {
+      scrollContainer.appendChild(footer); // appends after all sections
+    } else {
+      if (lastSection) lastSection.appendChild(footer); // desktop: inside last section
+    }
+    
     hideLoader();
   })
   .catch((err) => console.error("Could not load gallery.json:", err));
