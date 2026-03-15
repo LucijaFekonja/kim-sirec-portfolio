@@ -90,64 +90,6 @@ viewer.addEventListener("click", (e) => {
 });
 
 // --------------------
-// SWIPE NAVIGATION
-// --------------------
-let touchStartX = 0;
-let touchStartY = 0;
- 
-// Viewer swipe: left/right = prev/next slide, right-edge swipe = close viewer
-viewer.addEventListener("touchstart", (e) => {
-  touchStartX = e.touches[0].clientX;
-  touchStartY = e.touches[0].clientY;
-}, { passive: true });
- 
-viewer.addEventListener("touchend", (e) => {
-  const diffX = touchStartX - e.changedTouches[0].clientX;
-  const diffY = touchStartY - e.changedTouches[0].clientY;
-  // Only handle horizontal swipes
-  if (Math.abs(diffX) < Math.abs(diffY)) return;
-  if (Math.abs(diffX) < 50) return;
-  if (diffX > 0) {
-    nextSlide();
-  } else {
-    // Swipe right — go back to gallery
-    closeViewer();
-  }
-}, { passive: true });
- 
-// Gallery swipe: swipe right = go back (browser history)
-let galleryTouchStartX = 0;
-let galleryTouchStartY = 0;
- 
-document.addEventListener("touchstart", (e) => {
-  if (viewer.classList.contains("active")) return;
-  galleryTouchStartX = e.touches[0].clientX;
-  galleryTouchStartY = e.touches[0].clientY;
-}, { passive: true });
- 
-document.addEventListener("touchend", (e) => {
-  if (viewer.classList.contains("active")) return;
-  const diffX = galleryTouchStartX - e.changedTouches[0].clientX;
-  const diffY = galleryTouchStartY - e.changedTouches[0].clientY;
-  // Only handle horizontal swipes more prominent than vertical
-  if (Math.abs(diffX) < Math.abs(diffY)) return;
-  if (Math.abs(diffX) < 60) return;
-  if (diffX < 0) {
-    // Swipe right — go back
-    history.back();
-  }
-}, { passive: true });
- 
-viewer.addEventListener("wheel", (e) => {
-  if (!viewer.classList.contains("active")) return;
-  if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-    e.preventDefault();
-    if (e.deltaX > 30) nextSlide();
-    else if (e.deltaX < -30) prevSlide();
-  }
-}, { passive: false });
-
-// --------------------
 // KEYBOARD NAVIGATION
 // --------------------
 document.addEventListener("keydown", (e) => {

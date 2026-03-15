@@ -185,7 +185,7 @@ body {
   width: 100%;
   scroll-snap-align: start;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .project-card {
@@ -460,7 +460,7 @@ body {
     padding: 0;
     display: block;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
   }
   .project-card {
     position: absolute !important;

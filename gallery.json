@@ -6,8 +6,8 @@
     "offsetPortrait": { "x": 0, "y": -0 },
     "maxWidth": "45vw",
     "maxHeight": "90vh",
-    "offsetMobile":    { "x": 0, "y": -200 },
-    "heightMobile": "55vh",
+    "offsetMobile":    { "x": 0, "y": -220 },
+    "heightMobile": "50vh",
     "images": [
       "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_3820-1-2_ps.jpg",
       "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_3849-4_ps.jpg",
@@ -25,7 +25,7 @@
     "maxWidth": "45vw",
     "maxHeight": "90vh",
     "offsetMobile":    { "x": 0, "y": -160 },
-    "heightMobile": "55vh",
+    "heightMobile": "50vh",
     "images": [
       "photos/AAB arhitektura/Pisarne Vič/KIM_0208-5_ps_V2_final.jpg",
       "photos/AAB arhitektura/Pisarne Vič/KIM_0175-3_ps_final.jpg",
@@ -42,7 +42,7 @@
     "offsetPortrait": { "x": 0, "y": 0 },
     "maxWidth": "45vw",
     "maxHeight": "90vh",
-    "offsetMobile":    { "x": 0, "y": -320 },
+    "offsetMobile":    { "x": 0, "y": -380 },
     "heightMobile": "40vh",
     "images": [
       "photos/Arrea/ZGNL/KIM_5703-1_edited.jpg",
@@ -80,8 +80,8 @@
     "offsetPortrait": { "x": -50, "y": 0 },
     "maxWidth": "45vw",
     "maxHeight": "90vh",
-    "offsetMobile":    { "x": 0, "y": -230 },
-    "heightMobile": "50vh",
+    "offsetMobile":    { "x": 0, "y": -360 },
+    "heightMobile": "30vh",
     "images": [
         "photos/od-do arhitekti/Hiša BF Celje/KIM_9467_final.jpg",
       "photos/od-do arhitekti/Hiša BF Celje/KIM_9323_V4.jpg",
@@ -97,8 +97,8 @@
     "offsetPortrait": { "x": 0, "y": 0 },
     "maxWidth": "45vw",
     "maxHeight": "90vh",
-    "offsetMobile":    { "x": 0, "y": -260 },
-    "heightMobile": "50vh",
+    "offsetMobile":    { "x": 0, "y": -300 },
+    "heightMobile": "30vh",
     "images": [
       "photos/od-do arhitekti/Hiša Voge/KIM_6319-2_done.jpg",
       "photos/od-do arhitekti/Hiša Voge/KIM_6332-3_spletna.jpg",
@@ -115,7 +115,7 @@
     "offsetPortrait": { "x": 0, "y": 0 },
     "maxWidth": "45vw",
     "maxHeight": "90vh",
-    "offsetMobile":    { "x": 0, "y": -290 },
+    "offsetMobile":    { "x": 0, "y": -260 },
     "heightMobile": "40vh",
     "images": [
       "photos/SUPA/Prenova stanovanja/KIM_5998-1_done.jpg",
@@ -133,7 +133,7 @@
     "offsetPortrait": { "x": 100, "y": 0 },
     "maxWidth": "45vw",
     "maxHeight": "90vh",
-    "offsetMobile":    { "x": 0, "y": -350 },
+    "offsetMobile":    { "x": 0, "y": -300 },
     "heightMobile": "40vh",
     "images": [
       "photos/Vrabič/Hiša v Podutiku/KIM_4004-1_ps.jpg",
