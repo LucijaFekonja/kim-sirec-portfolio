@@ -6,7 +6,7 @@
     "offsetPortrait": { "x": 0, "y": -0 },
     "maxWidth": "45vw",
     "maxHeight": "90vh",
-    "offsetMobile":    { "x": -5, "y": -260 },
+    "offsetMobile":    { "x": -10, "y": -260 },
     "heightMobile": "30vh",
     "images": [
       "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_3820-1-2_ps.jpg",
@@ -42,7 +42,7 @@
     "offsetPortrait": { "x": 0, "y": 0 },
     "maxWidth": "45vw",
     "maxHeight": "90vh",
-    "offsetMobile":    { "x": -15, "y": -320 },
+    "offsetMobile":    { "x": -10, "y": -320 },
     "heightMobile": "30vh",
     "images": [
       "photos/Arrea/ZGNL/KIM_5703-1_edited.jpg",
@@ -80,7 +80,7 @@
     "offsetPortrait": { "x": -50, "y": 0 },
     "maxWidth": "45vw",
     "maxHeight": "90vh",
-    "offsetMobile":    { "x": -5, "y": -310 },
+    "offsetMobile":    { "x": -10, "y": -310 },
     "heightMobile": "30vh",
     "images": [
         "photos/od-do arhitekti/Hiša BF Celje/KIM_9467_final.jpg",
@@ -97,7 +97,7 @@
     "offsetPortrait": { "x": 0, "y": 0 },
     "maxWidth": "45vw",
     "maxHeight": "90vh",
-    "offsetMobile":    { "x": -5, "y": -225 },
+    "offsetMobile":    { "x": -5, "y": -240 },
     "heightMobile": "30vh",
     "images": [
       "photos/od-do arhitekti/Hiša Voge/KIM_6319-2_done.jpg",
@@ -115,8 +115,8 @@
     "offsetPortrait": { "x": 0, "y": 0 },
     "maxWidth": "45vw",
     "maxHeight": "90vh",
-    "offsetMobile":    { "x": -5, "y": -290 },
-    "heightMobile": "40vh",
+    "offsetMobile":    { "x": -10, "y": -300 },
+    "heightMobile": "35vh",
     "images": [
       "photos/SUPA/Prenova stanovanja/KIM_5998-1_done.jpg",
       "photos/SUPA/Prenova stanovanja/KIM_6114-5_done.jpg",
@@ -133,8 +133,8 @@
     "offsetPortrait": { "x": 100, "y": 0 },
     "maxWidth": "45vw",
     "maxHeight": "90vh",
-    "offsetMobile":    { "x": -5, "y": -270 },
-    "heightMobile": "40vh",
+    "offsetMobile":    { "x": -5, "y": -300 },
+    "heightMobile": "35vh",
     "images": [
       "photos/Vrabič/Hiša v Podutiku/KIM_4004-1_ps.jpg",
       "photos/Vrabič/Hiša v Podutiku/KIM_4060-8_ps.jpg",
