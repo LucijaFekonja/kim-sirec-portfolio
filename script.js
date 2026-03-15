@@ -422,8 +422,7 @@ fetch("gallery.json")
     }
 
     const lastSection = scrollContainer.querySelector(".gallery-section:last-child");
-
-    if (lastSection) lastSection.appendChild(footer);
+    if (lastSection && !isMobile) lastSection.appendChild(footer);
 
     hideLoader();
   })

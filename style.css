@@ -561,8 +561,9 @@ body {
     display: none;
   }
   .footer {
-    position: absolute;
-    bottom: 20px;
+    position: relative;
+    bottom: auto;
+    padding: 40px 0 50px;
   }
   .scroll-hint {
     display: none;
