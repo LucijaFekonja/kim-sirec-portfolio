@@ -22,16 +22,18 @@ document.addEventListener("mouseout",  (e) => { if (isCursorTarget(e.target)) cu
 // --------------------
 // OPEN PROJECT VIEWER
 // --------------------
-let currentIndex  = 0;
-let currentImages = [];
+let currentIndex     = 0;
+let currentImages    = [];
+let currentCardSync  = null; // callback to sync final index back to the card
 let viewerTrack;
 
-function openProject(project, startIndex = 0) {
+function openProject(project, startIndex = 0, onClose = null) {
   viewer.innerHTML = "";
   viewer.classList.add("active");
   history.pushState({ viewerOpen: true }, "");
-  currentImages = project.images;
-  currentIndex  = startIndex;
+  currentImages   = project.images;
+  currentIndex    = startIndex;
+  currentCardSync = onClose;
 
   viewerTrack = document.createElement("div");
   viewerTrack.classList.add("viewer-track");
@@ -88,6 +90,12 @@ function closeViewer() {
 }
 
 function _closeViewer() {
+  // Sync the viewer's final slide index back to the originating card
+  if (currentCardSync) {
+    currentCardSync(currentIndex);
+    currentCardSync = null;
+  }
+
   viewer.classList.remove("active");
   viewer.innerHTML = "";
   titleContainer.textContent = "";
@@ -294,6 +302,32 @@ fetch("gallery.json")
 
       let activeDotIndex = 0;
 
+      // ----------------------------------------------------------
+      // Shared helper: update card to display image at index `idx`
+      // Used both by dot clicks and by viewer-close sync.
+      // ----------------------------------------------------------
+      function setActiveImage(idx) {
+        activeDotIndex = idx;
+        const src = project.images[idx];
+
+        // Update dot highlights
+        dotsEl.querySelectorAll(".img-dot").forEach((d, di) => {
+          d.classList.toggle("active", di === idx);
+        });
+
+        // Update displayed image (and reposition card on desktop)
+        const probe = new Image();
+        probe.onload = () => {
+          img.src = src;
+          if (!isMobile) {
+            const off = pickOffset(probe.naturalWidth, probe.naturalHeight, project);
+            card.style.left = `${baseCX + off.x}px`;
+            card.style.top  = `${baseCY + off.y}px`;
+          }
+        };
+        probe.src = src;
+      }
+
       project.images.forEach((src, idx) => {
         const dot = document.createElement("div");
         dot.classList.add("img-dot");
@@ -302,30 +336,7 @@ fetch("gallery.json")
 
         dot.addEventListener("click", (e) => {
           e.stopPropagation();
-          activeDotIndex = idx;
-
-          dotsEl.querySelectorAll(".img-dot").forEach((d, di) => {
-            d.classList.toggle("active", di === idx);
-          });
-
-          const probe = new Image();
-
-          probe.onload = () => {
-            img.src = src;
-
-            if (!isMobile) {
-              const off = pickOffset(
-                probe.naturalWidth,
-                probe.naturalHeight,
-                project
-              );
-
-              card.style.left = `${baseCX + off.x}px`;
-              card.style.top = `${baseCY + off.y}px`;
-            }
-          };
-
-          probe.src = src;
+          setActiveImage(idx);
         });
 
         dotsEl.appendChild(dot);
@@ -334,9 +345,11 @@ fetch("gallery.json")
       card.appendChild(wrap);
       card.appendChild(dotsEl);
 
+      // Pass setActiveImage as the onClose callback so _closeViewer
+      // can sync the viewer's final slide index back to this card.
       card.addEventListener("click", (e) => {
         if (e.target.closest(".img-dot")) return;
-        openProject(project, activeDotIndex);
+        openProject(project, activeDotIndex, setActiveImage);
       });
 
       return card;
