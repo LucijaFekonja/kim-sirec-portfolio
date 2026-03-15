@@ -133,12 +133,6 @@ viewer.addEventListener("touchend", (e) => {
   if (Math.abs(diff) > 50) diff > 0 ? nextSlide() : prevSlide();
 }, { passive: true });
 
-scrollContainer.addEventListener("touchmove", (e) => {
-  if (!viewer.classList.contains("active")) {
-    e.preventDefault();
-  }
-}, { passive: false });
-
 viewer.addEventListener("wheel", (e) => {
   if (!viewer.classList.contains("active")) return;
   if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
