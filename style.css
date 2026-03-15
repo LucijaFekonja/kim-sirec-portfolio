@@ -469,7 +469,7 @@ body {
   flex-direction: column;
   gap: 20px;
   margin-top: 80px;
-  margin-bottom: 00px;  /* was 0 */
+  margin-bottom: 0px;  /* was 0 */
   transform: translateX(-10px);
 }
 
@@ -563,7 +563,7 @@ body {
   .footer {
     position: relative;
     bottom: auto;
-    padding: 20px 0 20px;
+    padding: 0px 0 60px;
   }
   .scroll-hint {
     display: none;
