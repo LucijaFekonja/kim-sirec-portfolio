@@ -348,30 +348,6 @@ fetch("gallery.json")
         dotsEl.appendChild(dot);
       });
 
-      if (isMobile) {
-        let swipeStartX = 0;
-        let swipeStartY = 0;
-            
-        wrap.addEventListener("touchstart", (e) => {
-          swipeStartX = e.touches[0].clientX;
-          swipeStartY = e.touches[0].clientY;
-        }, { passive: true });
-      
-        wrap.addEventListener("touchend", (e) => {
-          const diffX = swipeStartX - e.changedTouches[0].clientX;
-          const diffY = swipeStartY - e.changedTouches[0].clientY;
-        
-          // Only treat as horizontal swipe if X movement clearly dominates Y
-          if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
-            if (diffX > 0 && activeDotIndex < project.images.length - 1) {
-              setActiveImage(activeDotIndex + 1);
-            } else if (diffX < 0 && activeDotIndex > 0) {
-              setActiveImage(activeDotIndex - 1);
-            }
-          }
-        }, { passive: true });
-      }
-
       card.appendChild(wrap);
       card.appendChild(dotsEl);
 
