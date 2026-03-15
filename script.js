@@ -133,6 +133,12 @@ viewer.addEventListener("touchend", (e) => {
   if (Math.abs(diff) > 50) diff > 0 ? nextSlide() : prevSlide();
 }, { passive: true });
 
+scrollContainer.addEventListener("touchmove", (e) => {
+  if (!viewer.classList.contains("active")) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
 viewer.addEventListener("wheel", (e) => {
   if (!viewer.classList.contains("active")) return;
   if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
@@ -341,6 +347,25 @@ fetch("gallery.json")
 
         dotsEl.appendChild(dot);
       });
+
+      if (isMobile) {
+        let swipeStartX = 0;
+            
+        wrap.addEventListener("touchstart", (e) => {
+          swipeStartX = e.touches[0].clientX;
+        }, { passive: true });
+      
+        wrap.addEventListener("touchend", (e) => {
+          const diff = swipeStartX - e.changedTouches[0].clientX;
+          if (Math.abs(diff) > 40) {
+            if (diff > 0 && activeDotIndex < project.images.length - 1) {
+              setActiveImage(activeDotIndex + 1); // swipe left → next
+            } else if (diff < 0 && activeDotIndex > 0) {
+              setActiveImage(activeDotIndex - 1); // swipe right → prev
+            }
+          }
+        }, { passive: true });
+      }
 
       card.appendChild(wrap);
       card.appendChild(dotsEl);
