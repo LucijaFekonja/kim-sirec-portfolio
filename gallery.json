@@ -1,7 +1,7 @@
 [
   {
-    "name": "a2o2 arhitekti: TRG MRDV in kiosk",
-    "cover": "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_3820-1-2_ps.jpg",
+    "name": "Vrabič: Hiša v Podutiku",
+    "cover": "photos/Vrabič/Hiša v Podutiku/KIM_4004-1_ps.jpg",
     "offsetLandscape": { "x": 0, "y": 0 },
     "offsetPortrait": { "x": 0, "y": -0 },
     "maxWidth": "45vw",
@@ -9,12 +9,11 @@
     "offsetMobile":    { "x": -10, "y": -260 },
     "heightMobile": "30vh",
     "images": [
-      "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_3820-1-2_ps.jpg",
-      "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_3849-4_ps.jpg",
-      "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_3858-7_ps.jpg",
-      "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_4710-2_done.jpg",
-      "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_4752-3_done.jpg",
-      "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_4831-5_done.jpg"
+      "photos/Vrabič/Hiša v Podutiku/KIM_4004-1_ps.jpg",
+      "photos/Vrabič/Hiša v Podutiku/KIM_4060-8_ps.jpg",
+      "photos/Vrabič/Hiša v Podutiku/KIM_4079-1_ps.jpg",
+      "photos/Vrabič/Hiša v Podutiku/KIM_4130-10_ps.jpg",
+      "photos/Vrabič/Hiša v Podutiku/KIM_4171-12_ps.jpg"
     ]
   },
   {
@@ -127,8 +126,8 @@
     ]
   },
   {
-    "name": "Vrabič: Hiša v Podutiku",
-    "cover": "photos/Vrabič/Hiša v Podutiku/KIM_4004-1_ps.jpg",
+    "name": "a2o2 arhitekti: TRG MRDV in kiosk",
+    "cover": "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_3820-1-2_ps.jpg",
     "offsetLandscape": { "x": 0, "y": 30 },
     "offsetPortrait": { "x": 100, "y": 0 },
     "maxWidth": "45vw",
@@ -136,11 +135,12 @@
     "offsetMobile":    { "x": -5, "y": -300 },
     "heightMobile": "35vh",
     "images": [
-      "photos/Vrabič/Hiša v Podutiku/KIM_4004-1_ps.jpg",
-      "photos/Vrabič/Hiša v Podutiku/KIM_4060-8_ps.jpg",
-      "photos/Vrabič/Hiša v Podutiku/KIM_4079-1_ps.jpg",
-      "photos/Vrabič/Hiša v Podutiku/KIM_4130-10_ps.jpg",
-      "photos/Vrabič/Hiša v Podutiku/KIM_4171-12_ps.jpg"
+      "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_3820-1-2_ps.jpg",
+      "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_3849-4_ps.jpg",
+      "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_3858-7_ps.jpg",
+      "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_4710-2_done.jpg",
+      "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_4752-3_done.jpg",
+      "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_4831-5_done.jpg"
     ]
   }
 ]
