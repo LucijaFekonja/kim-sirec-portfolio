@@ -242,111 +242,174 @@ showLoader();
 fetch("gallery.json")
   .then((r) => r.json())
   .then((projects) => {
-    // Preload all cover images before building the gallery
-    const covers = projects.map(p => p.cover);
+    const covers = projects.map((p) => p.cover);
     return preloadImages(covers).then(() => projects);
   })
   .then((projects) => {
-    // Group into pairs — each pair = one scroll-snap section
-    for (let i = 0; i < projects.length; i += 2) {
-      const pair    = projects.slice(i, i + 2);
-      const section = document.createElement("div");
-      section.classList.add("gallery-section");
-      if (isMobile) {
-        // Use the first project's heightMobile if defined, fallback to 55vh
-        const h = pair[0].heightMobile || pair[1]?.heightMobile || "55vh";
-        section.style.height = h;
+
+    function createCard(project, baseCX, baseCY) {
+
+      const card = document.createElement("div");
+      card.classList.add("project-card");
+
+      if (!isMobile) {
+        card.style.position = "absolute";
+        card.style.transform = "translate(-50%, -50%)";
+        card.style.left = `${baseCX}px`;
+        card.style.top = `${baseCY}px`;
       }
 
-      pair.forEach((project, pairIdx) => {
-        const baseCX = isMobile
-          ? (pairIdx === 0 ? window.innerWidth * 0.25 : window.innerWidth * 0.75)
-          : (pairIdx === 0 ? window.innerWidth * 0.27 : window.innerWidth * 0.73);
-        const baseCY = window.innerHeight * 0.5;
+      const wrap = document.createElement("div");
+      wrap.classList.add("project-img-wrap");
 
-        const card = document.createElement("div");
-        card.classList.add("project-card");
-        card.style.position  = "absolute";
-        card.style.transform = "translate(-50%, -50%)";
-        card.style.left      = `${baseCX}px`;
-        card.style.top       = `${baseCY}px`;
+      if (!isMobile && project.maxWidth) wrap.style.maxWidth = project.maxWidth;
+      if (!isMobile && project.maxHeight) wrap.style.maxHeight = project.maxHeight;
 
-        // Image wrapper
-        const wrap = document.createElement("div");
-        wrap.classList.add("project-img-wrap");
-        if (!isMobile && project.maxWidth)  wrap.style.maxWidth  = project.maxWidth;
-        if (!isMobile && project.maxHeight) wrap.style.maxHeight = project.maxHeight;
+      const img = document.createElement("img");
+      img.classList.add("project-img");
+      img.alt = project.name;
 
-        const img = document.createElement("img");
-        img.classList.add("project-img");
-        img.alt = project.name;
-        if (!isMobile && project.maxWidth)  img.style.maxWidth  = project.maxWidth;
-        if (!isMobile && project.maxHeight) img.style.maxHeight = project.maxHeight;
+      if (!isMobile && project.maxWidth) img.style.maxWidth = project.maxWidth;
+      if (!isMobile && project.maxHeight) img.style.maxHeight = project.maxHeight;
 
-        // Position card once cover loads — use photo's own aspect ratio
-        img.addEventListener("load", () => {
+      img.addEventListener("load", () => {
+        if (!isMobile) {
           const off = pickOffset(img.naturalWidth, img.naturalHeight, project);
           card.style.left = `${baseCX + off.x}px`;
-          card.style.top  = `${baseCY + off.y}px`;
-        });
-        img.src = project.cover; // set AFTER attaching load listener
-
-        // Caption
-        const caption = document.createElement("span");
-        caption.classList.add("img-caption");
-        caption.textContent = project.name;
-
-        wrap.appendChild(img);
-        wrap.appendChild(caption);
-
-        // Dots
-        const dotsEl = document.createElement("div");
-        dotsEl.classList.add("img-dots");
-
-        let activeDotIndex = 0;
-
-        project.images.forEach((src, idx) => {
-          const dot = document.createElement("div");
-          dot.classList.add("img-dot");
-          if (idx === 0) dot.classList.add("active");
-
-          dot.addEventListener("click", (e) => {
-            e.stopPropagation();
-            activeDotIndex = idx;
-            dotsEl.querySelectorAll(".img-dot").forEach((d, di) => {
-              d.classList.toggle("active", di === idx);
-            });
-            // Probe new image's dimensions before swapping so card repositions correctly
-            const probe = new Image();
-            probe.onload = () => {
-              img.src = src;
-              const off = pickOffset(probe.naturalWidth, probe.naturalHeight, project);
-              card.style.left = `${baseCX + off.x}px`;
-              card.style.top  = `${baseCY + off.y}px`;
-            };
-            probe.src = src;
-          });
-
-          dotsEl.appendChild(dot);
-        });
-
-        card.appendChild(wrap);
-        card.appendChild(dotsEl);
-
-        card.addEventListener("click", (e) => {
-          if (e.target.closest(".img-dot")) return;
-          openProject(project, activeDotIndex);
-        });
-
-        section.appendChild(card);
+          card.style.top = `${baseCY + off.y}px`;
+        }
       });
 
-      scrollContainer.appendChild(section);
+      img.src = project.cover;
+
+      const caption = document.createElement("span");
+      caption.classList.add("img-caption");
+      caption.textContent = project.name;
+
+      wrap.appendChild(img);
+      wrap.appendChild(caption);
+
+      const dotsEl = document.createElement("div");
+      dotsEl.classList.add("img-dots");
+
+      let activeDotIndex = 0;
+
+      project.images.forEach((src, idx) => {
+        const dot = document.createElement("div");
+        dot.classList.add("img-dot");
+
+        if (idx === 0) dot.classList.add("active");
+
+        dot.addEventListener("click", (e) => {
+          e.stopPropagation();
+          activeDotIndex = idx;
+
+          dotsEl.querySelectorAll(".img-dot").forEach((d, di) => {
+            d.classList.toggle("active", di === idx);
+          });
+
+          const probe = new Image();
+
+          probe.onload = () => {
+            img.src = src;
+
+            if (!isMobile) {
+              const off = pickOffset(
+                probe.naturalWidth,
+                probe.naturalHeight,
+                project
+              );
+
+              card.style.left = `${baseCX + off.x}px`;
+              card.style.top = `${baseCY + off.y}px`;
+            }
+          };
+
+          probe.src = src;
+        });
+
+        dotsEl.appendChild(dot);
+      });
+
+      card.appendChild(wrap);
+      card.appendChild(dotsEl);
+
+      card.addEventListener("click", (e) => {
+        if (e.target.closest(".img-dot")) return;
+        openProject(project, activeDotIndex);
+      });
+
+      return card;
     }
 
-    // Place footer inside the last section so it's absolutely positioned
-    // at the bottom of the last row — visible only when scrolled there
+    // --------------------
+    // MOBILE LAYOUT
+    // --------------------
+
+    if (isMobile) {
+
+  const section = document.createElement("div");
+  section.classList.add("gallery-section", "mobile-columns");
+
+  const leftCol = document.createElement("div");
+  leftCol.classList.add("mobile-column");
+
+  const rightCol = document.createElement("div");
+  rightCol.classList.add("mobile-column");
+
+  projects.forEach((project, index) => {
+
+    const card = createCard(project);
+
+    if (index % 2 === 0) {
+      leftCol.appendChild(card);
+    } else {
+      rightCol.appendChild(card);
+    }
+
+  });
+
+  section.appendChild(leftCol);
+  section.appendChild(rightCol);
+
+  scrollContainer.appendChild(section);
+
+}
+
+    // --------------------
+    // DESKTOP LAYOUT
+    // --------------------
+
+    else {
+
+      for (let i = 0; i < projects.length; i += 2) {
+
+        const pair = projects.slice(i, i + 2);
+
+        const section = document.createElement("div");
+        section.classList.add("gallery-section");
+
+        pair.forEach((project, pairIdx) => {
+
+          const baseCX =
+            pairIdx === 0
+              ? window.innerWidth * 0.27
+              : window.innerWidth * 0.73;
+
+          const baseCY = window.innerHeight * 0.5;
+
+          const card = createCard(project, baseCX, baseCY);
+
+          section.appendChild(card);
+        });
+
+        scrollContainer.appendChild(section);
+      }
+
+    }
+
     const lastSection = scrollContainer.querySelector(".gallery-section:last-child");
+
     if (lastSection) lastSection.appendChild(footer);
 
     hideLoader();

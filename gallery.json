@@ -79,7 +79,7 @@
     "offsetPortrait": { "x": -50, "y": 0 },
     "maxWidth": "45vw",
     "maxHeight": "90vh",
-    "offsetMobile":    { "x": -10, "y": -310 },
+    "offsetMobile":    { "x": -10, "y": -0 },
     "heightMobile": "30vh",
     "images": [
         "photos/od-do arhitekti/Hiša BF Celje/KIM_9467_final.jpg",
