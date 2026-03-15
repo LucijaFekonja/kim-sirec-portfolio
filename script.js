@@ -29,6 +29,7 @@ let viewerTrack;
 function openProject(project, startIndex = 0) {
   viewer.innerHTML = "";
   viewer.classList.add("active");
+  history.pushState({ viewerOpen: true }, "");
   currentImages = project.images;
   currentIndex  = startIndex;
 
@@ -79,11 +80,24 @@ function prevSlide() { if (currentIndex > 0) { currentIndex--; updateViewerSlide
 // CLOSE VIEWER
 // --------------------
 function closeViewer() {
+  if (history.state?.viewerOpen) {
+    history.back();   // triggers popstate → which calls _closeViewer
+    return;
+  }
+  _closeViewer();
+}
+
+function _closeViewer() {
   viewer.classList.remove("active");
   viewer.innerHTML = "";
   titleContainer.textContent = "";
   titleContainer.classList.remove("active");
 }
+
+// Add this once, at top level:
+window.addEventListener("popstate", () => {
+  if (viewer.classList.contains("active")) _closeViewer();
+});
 
 viewer.addEventListener("click", (e) => {
   if (!e.target.closest(".viewer-slide img") && !e.target.closest(".viewer-arrow")) closeViewer();
