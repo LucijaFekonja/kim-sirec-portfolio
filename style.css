@@ -563,7 +563,7 @@ body {
   .footer {
     position: relative;
     bottom: auto;
-    padding: 20px 0 20px;
+    padding: 40px 0 50px;
   }
   .scroll-hint {
     display: none;
