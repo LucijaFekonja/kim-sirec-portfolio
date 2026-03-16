@@ -469,7 +469,7 @@ body {
   flex-direction: column;
   gap: 20px;
   margin-top: 80px;
-  margin-bottom: 0px;  /* was 0 */
+  margin-bottom: 80px;
   transform: translateX(-10px);
 }
 
@@ -509,7 +509,7 @@ body {
     width: 100%;
     height: auto;
   }
-  
+
   /* .gallery-section {
     height: 55vh; default; overridden per-section by heightMobile in gallery.json
     min-height: unset;
@@ -563,7 +563,7 @@ body {
   .footer {
     position: relative;
     bottom: auto;
-    padding: 40px 0 50px;
+    padding: 20px 0 50px;
   }
   .scroll-hint {
     display: none;
