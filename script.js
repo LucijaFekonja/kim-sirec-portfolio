@@ -147,34 +147,34 @@ viewer.addEventListener("wheel", (e) => {
 // --------------------
 let isScrolling = false;
 
-if (window.innerWidth > 768) {
-  scrollContainer.addEventListener("wheel", (e) => {
-    e.preventDefault();
-    if (isScrolling) return;
-    isScrolling = true;
-    const dir  = e.deltaY > 0 ? 1 : -1;
-    const h    = scrollContainer.clientHeight;
-    const snap = Math.round(scrollContainer.scrollTop / h);
-    scrollContainer.scrollTo({ top: (snap + dir) * h, behavior: "smooth" });
-    setTimeout(() => { isScrolling = false; }, 800);
-  }, { passive: false });
-}
+// if (window.innerWidth > 768) {
+//   scrollContainer.addEventListener("wheel", (e) => {
+//     e.preventDefault();
+//     if (isScrolling) return;
+//     isScrolling = true;
+//     const dir  = e.deltaY > 0 ? 1 : -1;
+//     const h    = scrollContainer.clientHeight;
+//     const snap = Math.round(scrollContainer.scrollTop / h);
+//     scrollContainer.scrollTo({ top: (snap + dir) * h, behavior: "smooth" });
+//     setTimeout(() => { isScrolling = false; }, 800);
+//   }, { passive: false });
+// }
 
 // --------------------
 // KEYBOARD GALLERY SCROLL
 // --------------------
-document.addEventListener("keydown", (e) => {
-  if (viewer.classList.contains("active")) return;
-  if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
-  e.preventDefault();
-  if (isScrolling) return;
-  isScrolling = true;
-  const h    = scrollContainer.clientHeight;
-  const snap = Math.round(scrollContainer.scrollTop / h);
-  const dir  = e.key === "ArrowDown" ? 1 : -1;
-  scrollContainer.scrollTo({ top: (snap + dir) * h, behavior: "smooth" });
-  setTimeout(() => { isScrolling = false; }, 800);
-});
+// document.addEventListener("keydown", (e) => {
+//   if (viewer.classList.contains("active")) return;
+//   if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+//   e.preventDefault();
+//   if (isScrolling) return;
+//   isScrolling = true;
+//   const h    = scrollContainer.clientHeight;
+//   const snap = Math.round(scrollContainer.scrollTop / h);
+//   const dir  = e.key === "ArrowDown" ? 1 : -1;
+//   scrollContainer.scrollTo({ top: (snap + dir) * h, behavior: "smooth" });
+//   setTimeout(() => { isScrolling = false; }, 800);
+// });
 
 // --------------------
 // SHOW FOOTER ON LAST ROW

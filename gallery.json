@@ -3,9 +3,9 @@
     "name": "Vrabič: Hiša v Podutiku",
     "cover": "photos/Vrabič/Hiša v Podutiku/KIM_4004-1_ps.jpg",
     "offsetLandscape": { "x": 0, "y": 0 },
-    "offsetPortrait": { "x": 0, "y": -0 },
-    "maxWidth": "45vw",
-    "maxHeight": "90vh",
+    "offsetPortrait": { "x": 0, "y": 0 },
+    "maxWidth": "38vw",
+    "maxHeight": "76vh",
     "offsetMobile":    { "x": -10, "y": -260 },
     "heightMobile": "30vh",
     "images": [
@@ -19,10 +19,10 @@
   {
     "name": "AAB arhitektura: Pisarne Vič",
     "cover": "photos/AAB arhitektura/Pisarne Vič/KIM_0208-5_ps_V2_final.jpg",
-    "offsetLandscape": { "x": 20, "y": 30 },
-    "offsetPortrait": { "x": 0, "y": -10 },
-    "maxWidth": "45vw",
-    "maxHeight": "90vh",
+    "offsetLandscape": { "x": 0, "y": 0 },
+    "offsetPortrait": { "x": 0, "y": 0 },
+    "maxWidth": "38vw",
+    "maxHeight": "76vh",
     "offsetMobile":    { "x": -5, "y": -190 },
     "heightMobile": "30vh",
     "images": [
@@ -37,10 +37,10 @@
   {
     "name": "Arrea: ZGNL",
     "cover": "photos/Arrea/ZGNL/KIM_5703-1_edited.jpg",
-    "offsetLandscape": { "x": 0, "y": 20 },
+    "offsetLandscape": { "x": 0, "y": 0 },
     "offsetPortrait": { "x": 0, "y": 0 },
-    "maxWidth": "45vw",
-    "maxHeight": "90vh",
+    "maxWidth": "38vw",
+    "maxHeight": "76vh",
     "offsetMobile":    { "x": -10, "y": -320 },
     "heightMobile": "30vh",
     "images": [
@@ -55,10 +55,10 @@
   {
     "name": "od-do arhitekti: Enodružinska hiša Faljič Maribor",
     "cover": "photos/od-do arhitekti/Enodružinska hiša Faljič Maribor/KIM_8123-12_ps.jpg",
-    "offsetLandscape": { "x": 0, "y": -30 },
+    "offsetLandscape": { "x": 0, "y": 0 },
     "offsetPortrait": { "x": 100, "y": 0 },
-    "maxWidth": "45vw",
-    "maxHeight": "90vh",
+    "maxWidth": "38vw",
+    "maxHeight": "76vh",
     "offsetMobile":    { "x": -5, "y": -180 },
     "heightMobile": "30vh",
     "images": [
@@ -75,10 +75,10 @@
   {
     "name": "od-do arhitekti: Hiša BF Celje",
     "cover": "photos/od-do arhitekti/Hiša BF Celje/KIM_9467_final.jpg",
-    "offsetLandscape": { "x": 0, "y": -20 },
+    "offsetLandscape": { "x": 0, "y": 0 },
     "offsetPortrait": { "x": -50, "y": 0 },
-    "maxWidth": "45vw",
-    "maxHeight": "90vh",
+    "maxWidth": "38vw",
+    "maxHeight": "76vh",
     "offsetMobile":    { "x": -10, "y": -0 },
     "heightMobile": "30vh",
     "images": [
@@ -92,10 +92,10 @@
   {
     "name": "od-do arhitekti: Hiša Voge",
     "cover": "photos/od-do arhitekti/Hiša Voge/KIM_6319-2_done.jpg",
-    "offsetLandscape": { "x": 0, "y": -20 },
+    "offsetLandscape": { "x": 0, "y": 0 },
     "offsetPortrait": { "x": 0, "y": 0 },
-    "maxWidth": "45vw",
-    "maxHeight": "90vh",
+    "maxWidth": "38vw",
+    "maxHeight": "76vh",
     "offsetMobile":    { "x": -5, "y": -240 },
     "heightMobile": "30vh",
     "images": [
@@ -110,10 +110,10 @@
   {
     "name": "SUPA: Prenova stanovanja",
     "cover": "photos/SUPA/Prenova stanovanja/KIM_5998-1_done.jpg",
-    "offsetLandscape": { "x": 0, "y": -10 },
+    "offsetLandscape": { "x": 0, "y": 0 },
     "offsetPortrait": { "x": 0, "y": 0 },
-    "maxWidth": "45vw",
-    "maxHeight": "90vh",
+    "maxWidth": "38vw",
+    "maxHeight": "76vh",
     "offsetMobile":    { "x": -10, "y": -300 },
     "heightMobile": "35vh",
     "images": [
@@ -128,10 +128,10 @@
   {
     "name": "a2o2 arhitekti: TRG MRDV in kiosk",
     "cover": "photos/a2o2 arhitekti/TRG MRDV in kiosk/KIM_3820-1-2_ps.jpg",
-    "offsetLandscape": { "x": 0, "y": 30 },
-    "offsetPortrait": { "x": 100, "y": 0 },
-    "maxWidth": "45vw",
-    "maxHeight": "90vh",
+    "offsetLandscape": { "x": 0, "y": 0 },
+    "offsetPortrait": { "x": 300, "y": 0 },
+    "maxWidth": "38vw",
+    "maxHeight": "76vh",
     "offsetMobile":    { "x": -5, "y": -300 },
     "heightMobile": "35vh",
     "images": [
