@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kim Širec — Contact</title>
-
     <link rel="stylesheet" href="style.css" />
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -14,22 +12,23 @@
       rel="stylesheet"
     />
   </head>
-
   <body>
     <div class="custom-cursor" id="cursor"></div>
 
-    <a class="contact-x" href="index.html">
-      <img src="icons/close_aaa.png" alt="close" width="20" height="20" />
+    <a class="contact-x" href="index.html" aria-label="Back to homepage">
+      <img src="icons/close_aaa.png" alt="Close" width="20" height="20" />
     </a>
 
-    <div class="contact-page active">
+    <main class="contact-page active">
       <div class="contact-content">
         <h1 class="contact-name">Kim Širec</h1>
-        <p class="contact-bio">Rabim tvoj opis</p>
+        <p class="contact-bio">
+          Photography portfolio focused on architecture, interiors, and spatial detail.
+        </p>
         <p class="contact-break-line">- - -</p>
         <div class="contact-links">
           <a href="mailto:kim.sirec100@gmail.com">kim.sirec100@gmail.com</a>
-          <a href="https://instagram.com/sladkomleko/" target="_blank">
+          <a href="https://instagram.com/sladkomleko/" target="_blank" rel="noreferrer" aria-label="Instagram">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -48,7 +47,7 @@
           </a>
         </div>
       </div>
-    </div>
+    </main>
 
     <script src="script.js"></script>
   </body>

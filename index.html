@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kim Širec</title>
-
     <link rel="stylesheet" href="style.css" />
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -14,19 +12,18 @@
       rel="stylesheet"
     />
   </head>
-
   <body>
     <div class="custom-cursor" id="cursor"></div>
 
-    <a class="mobile-contact-btn" href="contact.html">
-      <img src="icons/email.png" alt="close" width="16" height="16" />
+    <a class="mobile-contact-btn" href="contact.html" aria-label="Open contact page">
+      <img src="icons/email.png" alt="Email" width="16" height="16" />
     </a>
 
-    <div class="scroll-hint" id="scrollHint">
-      <img src="icons/arrow-down_128.png" alt="close" width="20" height="20" />
+    <div class="scroll-hint" id="scrollHint" aria-hidden="true">
+      <img src="icons/arrow-down_128.png" alt="" width="20" height="20" />
     </div>
 
-    <div id="loader">
+    <div id="loader" class="active" aria-live="polite">
       <div class="loader-inner">
         <span class="loader-name">Kim Širec</span>
         <div class="loader-bar-wrap">
@@ -35,21 +32,21 @@
       </div>
     </div>
 
-    <div class="header" id="header">
+    <header class="header" id="header">
       <div class="header-clip">
-        <div class="header-inner">
+        <div class="header-inner" role="button" tabindex="0" aria-label="Open contact page">
           <span class="header-name">Kim Širec</span>
           <span class="header-contact">kontakt</span>
         </div>
       </div>
-    </div>
+    </header>
 
-    <div class="gallery-container" id="scrollContainer">
+    <main class="gallery-container" id="scrollContainer">
       <div class="gallery" id="gallery"></div>
 
       <div class="footer">
-        <a href="mailto:kim.sirec100@email.com">kim.sirec100@gmail.com</a>
-        <a href="https://instagram.com/sladkomleko/" target="_blank">
+        <a href="mailto:kim.sirec100@gmail.com">kim.sirec100@gmail.com</a>
+        <a href="https://instagram.com/sladkomleko/" target="_blank" rel="noreferrer" aria-label="Instagram">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="14"
@@ -67,10 +64,9 @@
           </svg>
         </a>
       </div>
-    </div>
+    </main>
 
     <div class="viewer" id="viewer"></div>
-
     <div id="viewer-title-container"></div>
 
     <script src="script.js"></script>

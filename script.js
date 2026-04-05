@@ -1,96 +1,192 @@
 const scrollContainer = document.getElementById("scrollContainer");
-const viewer          = document.getElementById("viewer");
-const titleContainer  = document.getElementById("viewer-title-container");
-const cursor          = document.getElementById("cursor");
-const footer          = document.querySelector(".footer");
-const scrollHint      = document.getElementById("scrollHint");
+const viewer = document.getElementById("viewer");
+const titleContainer = document.getElementById("viewer-title-container");
+const cursor = document.getElementById("cursor");
+const footer = document.querySelector(".footer");
+const scrollHint = document.getElementById("scrollHint");
+const headerInner = document.querySelector(".header-inner");
+const loader = document.getElementById("loader");
+const isMobile = window.innerWidth <= 768;
+const isGalleryPage = Boolean(scrollContainer && viewer && titleContainer);
 
-// --------------------
-// CUSTOM CURSOR
-// --------------------
-document.addEventListener("mousemove", (e) => {
-  cursor.style.left = e.clientX + "px";
-  cursor.style.top  = e.clientY + "px";
-});
+let viewerTrack = null;
+let currentImages = [];
+let currentIndex = 0;
+let currentCardSync = null;
+let touchStartX = 0;
 
-function isCursorTarget(el) {
-  return el.closest(".project-card, .viewer-arrow, a, button, .header-inner, .img-dot");
+function showLoader() {
+  if (loader) loader.classList.add("active");
 }
-document.addEventListener("mouseover", (e) => { if (isCursorTarget(e.target)) cursor.classList.add("hovering"); });
-document.addEventListener("mouseout",  (e) => { if (isCursorTarget(e.target)) cursor.classList.remove("hovering"); });
 
-// --------------------
-// OPEN PROJECT VIEWER
-// --------------------
-let currentIndex     = 0;
-let currentImages    = [];
-let currentCardSync  = null; // callback to sync final index back to the card
-let viewerTrack;
+function hideLoader() {
+  if (loader) loader.classList.remove("active");
+}
+
+function setupCursor() {
+  if (!cursor) return;
+
+  document.addEventListener("mousemove", (event) => {
+    cursor.style.left = `${event.clientX}px`;
+    cursor.style.top = `${event.clientY}px`;
+  });
+
+  const isCursorTarget = (element) =>
+    Boolean(
+      element?.closest(
+        ".project-card, .viewer-arrow, a, button, .header-inner, .img-dot",
+      ),
+    );
+
+  document.addEventListener("mouseover", (event) => {
+    if (isCursorTarget(event.target)) cursor.classList.add("hovering");
+  });
+
+  document.addEventListener("mouseout", (event) => {
+    if (isCursorTarget(event.target)) cursor.classList.remove("hovering");
+  });
+}
+
+function setupContactLink() {
+  if (!headerInner) return;
+
+  const goToContact = () => {
+    window.location.href = "contact.html";
+  };
+
+  headerInner.addEventListener("click", goToContact);
+  headerInner.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      goToContact();
+    }
+  });
+}
+
+function updateViewerSlide() {
+  if (!viewerTrack) return;
+
+  const slides = viewerTrack.querySelectorAll(".viewer-slide");
+
+  slides.forEach((slide, index) => {
+    if (index === currentIndex) {
+      slide.classList.add("active");
+    } else {
+      slide.classList.remove("active");
+    }
+  });
+
+  const leftArrow = viewer.querySelector(".viewer-arrow.left");
+  const rightArrow = viewer.querySelector(".viewer-arrow.right");
+
+  if (leftArrow) {
+    leftArrow.style.opacity = currentIndex === 0 ? "0" : "1";
+    leftArrow.style.pointerEvents = currentIndex === 0 ? "none" : "auto";
+  }
+
+  if (rightArrow) {
+    rightArrow.style.opacity =
+      currentIndex === currentImages.length - 1 ? "0" : "1";
+    rightArrow.style.pointerEvents =
+      currentIndex === currentImages.length - 1 ? "none" : "auto";
+  }
+}
+
+function nextSlide() {
+  if (currentIndex < currentImages.length - 1) {
+    currentIndex += 1;
+    updateViewerSlide();
+  }
+}
+
+function prevSlide() {
+  if (currentIndex > 0) {
+    currentIndex -= 1;
+    updateViewerSlide();
+  }
+}
 
 function openProject(project, startIndex = 0, onClose = null) {
+  if (!viewer || !titleContainer) return;
+
   viewer.innerHTML = "";
   viewer.classList.add("active");
   history.pushState({ viewerOpen: true }, "");
-  currentImages   = project.images;
-  currentIndex    = startIndex;
+
+  currentImages = project.images || [];
+  currentIndex = startIndex;
   currentCardSync = onClose;
 
   viewerTrack = document.createElement("div");
   viewerTrack.classList.add("viewer-track");
 
-  currentImages.forEach((src) => {
+  currentImages.forEach((src, index) => {
     const slide = document.createElement("div");
     slide.classList.add("viewer-slide");
+
+    if (index === currentIndex) {
+      slide.classList.add("active");
+    }
+
     const img = document.createElement("img");
     img.src = src;
+    img.alt = `${project.name} image ${index + 1}`;
+
     slide.appendChild(img);
     viewerTrack.appendChild(slide);
   });
 
   viewer.appendChild(viewerTrack);
-  titleContainer.textContent = project.name;
-  titleContainer.classList.add("active");
 
-  const leftArrow = document.createElement("div");
+  const leftArrow = document.createElement("button");
   leftArrow.classList.add("viewer-arrow", "left");
+  leftArrow.type = "button";
+  leftArrow.setAttribute("aria-label", "Previous image");
   leftArrow.innerHTML = "&#8249;";
-  leftArrow.addEventListener("click", (e) => { e.stopPropagation(); prevSlide(); });
+  leftArrow.addEventListener("click", (event) => {
+    event.stopPropagation();
+    prevSlide();
+  });
 
-  const rightArrow = document.createElement("div");
+  const rightArrow = document.createElement("button");
   rightArrow.classList.add("viewer-arrow", "right");
+  rightArrow.type = "button";
+  rightArrow.setAttribute("aria-label", "Next image");
   rightArrow.innerHTML = "&#8250;";
-  rightArrow.addEventListener("click", (e) => { e.stopPropagation(); nextSlide(); });
+  rightArrow.addEventListener("click", (event) => {
+    console.log(currentIndex);
+    event.stopPropagation();
+    nextSlide();
+  });
 
   viewer.appendChild(leftArrow);
   viewer.appendChild(rightArrow);
+
+  titleContainer.innerHTML = `
+    <div class="viewer-title-line1">
+      ${project.name}${project.location ? `, ${project.location}` : ""}
+    </div>
+    <div class="viewer-title-line2">
+      ${project.author || ""}
+    </div>
+  `;
+  titleContainer.classList.add("active");
+
   updateViewerSlide();
 }
 
-function updateViewerSlide() {
-  if (!viewerTrack) return;
-  viewerTrack.style.transform = `translateX(-${currentIndex * 100}vw)`;
-  const l = viewer.querySelector(".viewer-arrow.left");
-  const r = viewer.querySelector(".viewer-arrow.right");
-  if (l) l.style.opacity = currentIndex === 0 ? "0" : "1";
-  if (r) r.style.opacity = currentIndex === currentImages.length - 1 ? "0" : "1";
-}
-
-function nextSlide() { if (currentIndex < currentImages.length - 1) { currentIndex++; updateViewerSlide(); } }
-function prevSlide() { if (currentIndex > 0) { currentIndex--; updateViewerSlide(); } }
-
-// --------------------
-// CLOSE VIEWER
-// --------------------
 function closeViewer() {
   if (history.state?.viewerOpen) {
-    history.back();   // triggers popstate → which calls _closeViewer
+    history.back();
     return;
   }
-  _closeViewer();
+
+  forceCloseViewer();
 }
 
-function _closeViewer() {
-  // Sync the viewer's final slide index back to the originating card
+function forceCloseViewer() {
+  if (!viewer || !titleContainer) return;
+
   if (currentCardSync) {
     currentCardSync(currentIndex);
     currentCardSync = null;
@@ -100,335 +196,390 @@ function _closeViewer() {
   viewer.innerHTML = "";
   titleContainer.textContent = "";
   titleContainer.classList.remove("active");
+
+  viewerTrack = null;
+  currentImages = [];
+  currentIndex = 0;
 }
 
-// Add this once, at top level:
-window.addEventListener("popstate", () => {
-  if (viewer.classList.contains("active")) _closeViewer();
-});
-
-viewer.addEventListener("click", (e) => {
-  if (!e.target.closest(".viewer-slide img") && !e.target.closest(".viewer-arrow")) closeViewer();
-});
-
-// --------------------
-// KEYBOARD NAVIGATION
-// --------------------
-document.addEventListener("keydown", (e) => {
-  if (!viewer.classList.contains("active")) return;
-  if (e.key === "ArrowRight") nextSlide();
-  if (e.key === "ArrowLeft")  prevSlide();
-  if (e.key === "Escape")     closeViewer();
-});
-
-// --------------------
-// TRACKPAD SWIPE IN VIEWER
-// --------------------
-viewer.addEventListener("touchstart", (e) => {
-  touchStartX = e.touches[0].clientX;
-}, { passive: true });
-
-viewer.addEventListener("touchend", (e) => {
-  const diff = touchStartX - e.changedTouches[0].clientX;
-  if (Math.abs(diff) > 50) diff > 0 ? nextSlide() : prevSlide();
-}, { passive: true });
-
-viewer.addEventListener("wheel", (e) => {
-  if (!viewer.classList.contains("active")) return;
-  if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-    e.preventDefault();
-    if (e.deltaX > 30) nextSlide();
-    else if (e.deltaX < -30) prevSlide();
-  }
-}, { passive: false });
-
-// --------------------
-// SMOOTH SCROLL SNAP (desktop only)
-// --------------------
-let isScrolling = false;
-
-// if (window.innerWidth > 768) {
-//   scrollContainer.addEventListener("wheel", (e) => {
-//     e.preventDefault();
-//     if (isScrolling) return;
-//     isScrolling = true;
-//     const dir  = e.deltaY > 0 ? 1 : -1;
-//     const h    = scrollContainer.clientHeight;
-//     const snap = Math.round(scrollContainer.scrollTop / h);
-//     scrollContainer.scrollTo({ top: (snap + dir) * h, behavior: "smooth" });
-//     setTimeout(() => { isScrolling = false; }, 800);
-//   }, { passive: false });
-// }
-
-// --------------------
-// KEYBOARD GALLERY SCROLL
-// --------------------
-// document.addEventListener("keydown", (e) => {
-//   if (viewer.classList.contains("active")) return;
-//   if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
-//   e.preventDefault();
-//   if (isScrolling) return;
-//   isScrolling = true;
-//   const h    = scrollContainer.clientHeight;
-//   const snap = Math.round(scrollContainer.scrollTop / h);
-//   const dir  = e.key === "ArrowDown" ? 1 : -1;
-//   scrollContainer.scrollTo({ top: (snap + dir) * h, behavior: "smooth" });
-//   setTimeout(() => { isScrolling = false; }, 800);
-// });
-
-// --------------------
-// SHOW FOOTER ON LAST ROW
-// --------------------
-// --------------------
-// SCROLL POSITION TRACKING
-// --------------------
-// On mobile, body scrolls. On desktop, #scrollContainer scrolls.
-function onScroll() {
-  const scrollTop = isMobile ? window.scrollY : scrollContainer.scrollTop;
-  const atTop     = scrollTop < 50;
-  scrollHint.classList.toggle("visible", atTop);
-}
-
-scrollContainer.addEventListener("scroll", onScroll);
-window.addEventListener("scroll", onScroll);
-
-// --------------------
-// SCROLL HINT ARROW
-// --------------------
-scrollHint.classList.add("visible");
-
-// --------------------
-// CONTACT PAGE
-// --------------------
-document.querySelector(".header-contact").addEventListener("click", () => {
-  window.location.href = "contact.html";
-});
-
-// --------------------
-// OFFSET HELPER
-// --------------------
-// Desktop: offsetPortrait (photo taller than wide) or offsetLandscape (wider than tall)
-// Mobile:  offsetMobile (single offset, ignores aspect ratio)
-const isMobile = window.innerWidth <= 768;
-
-function pickOffset(naturalW, naturalH, project) {
+function pickOffset(naturalWidth, naturalHeight, project) {
   if (isMobile) return project.offsetMobile || { x: 0, y: 0 };
-  const isPortraitPhoto = naturalH > naturalW;
+
+  const isPortraitPhoto = naturalHeight > naturalWidth;
   return isPortraitPhoto
-    ? (project.offsetPortrait  || project.offsetLandscape || { x: 0, y: 0 })
-    : (project.offsetLandscape || { x: 0, y: 0 });
+    ? project.offsetPortrait || project.offsetLandscape || { x: 0, y: 0 }
+    : project.offsetLandscape || { x: 0, y: 0 };
 }
 
-// --------------------
-// LOADER
-// --------------------
-const loader = document.getElementById("loader");
- 
-function showLoader() { loader.classList.add("active"); }
-function hideLoader() { loader.classList.remove("active"); }
- 
 function preloadImages(urls) {
   const bar = document.getElementById("loaderBar");
   let loaded = 0;
-  const total = urls.length;
-  return Promise.all(urls.map(src => new Promise(resolve => {
-    const img = new Image();
-    img.onload = img.onerror = () => {
-      loaded++;
-      if (bar) bar.style.width = `${Math.round((loaded / total) * 100)}%`;
-      resolve();
-    };
-    img.src = src;
-  })));
+  const total = Math.max(urls.length, 1);
+
+  return Promise.all(
+    urls.map(
+      (src) =>
+        new Promise((resolve) => {
+          const img = new Image();
+          img.onload = img.onerror = () => {
+            loaded += 1;
+            if (bar) {
+              bar.style.width = `${Math.round((loaded / total) * 100)}%`;
+            }
+            resolve();
+          };
+          img.src = src;
+        }),
+    ),
+  );
 }
 
-// --------------------
-// LOAD PROJECT DATA
-// --------------------
-showLoader();
+function setupGalleryEvents() {
+  if (!viewer) return;
 
-fetch("gallery.json")
-  .then((r) => r.json())
-  .then((projects) => {
-    const covers = projects.map((p) => p.cover);
-    return preloadImages(covers).then(() => projects);
-  })
-  .then((projects) => {
+  window.addEventListener("popstate", () => {
+    if (viewer.classList.contains("active")) forceCloseViewer();
+  });
 
-    function createCard(project, baseCX, baseCY) {
+  viewer.addEventListener("click", (event) => {
+    if (
+      !event.target.closest(".viewer-slide img") &&
+      !event.target.closest(".viewer-arrow")
+    ) {
+      closeViewer();
+    }
+  });
 
-      const card = document.createElement("div");
-      card.classList.add("project-card");
+  document.addEventListener("keydown", (event) => {
+    const tagName = document.activeElement?.tagName;
+    const isTypingTarget =
+      document.activeElement?.isContentEditable ||
+      tagName === "INPUT" ||
+      tagName === "TEXTAREA" ||
+      tagName === "SELECT";
 
-      if (!isMobile) {
-        card.style.position = "absolute";
-        card.style.transform = "translate(-50%, -50%)";
-        card.style.left = `${baseCX}px`;
-        card.style.top = `${baseCY}px`;
-      }
+    if (isTypingTarget) return;
 
-      const wrap = document.createElement("div");
-      wrap.classList.add("project-img-wrap");
-
-      if (!isMobile && project.maxWidth) wrap.style.maxWidth = project.maxWidth;
-      if (!isMobile && project.maxHeight) wrap.style.maxHeight = project.maxHeight;
-
-      const img = document.createElement("img");
-      img.classList.add("project-img");
-      img.alt = project.name;
-
-      if (!isMobile && project.maxWidth) img.style.maxWidth = project.maxWidth;
-      if (!isMobile && project.maxHeight) img.style.maxHeight = project.maxHeight;
-
-      img.addEventListener("load", () => {
-        if (!isMobile) {
-          const off = pickOffset(img.naturalWidth, img.naturalHeight, project);
-          card.style.left = `${baseCX + off.x}px`;
-          card.style.top = `${baseCY + off.y}px`;
-        }
-      });
-
-      img.src = project.cover;
-
-      const caption = document.createElement("span");
-      caption.classList.add("img-caption");
-      caption.textContent = project.name;
-
-      wrap.appendChild(img);
-      wrap.appendChild(caption);
-
-      const dotsEl = document.createElement("div");
-      dotsEl.classList.add("img-dots");
-
-      let activeDotIndex = 0;
-
-      // ----------------------------------------------------------
-      // Shared helper: update card to display image at index `idx`
-      // Used both by dot clicks and by viewer-close sync.
-      // ----------------------------------------------------------
-      function setActiveImage(idx) {
-        activeDotIndex = idx;
-        const src = project.images[idx];
-
-        // Update dot highlights
-        dotsEl.querySelectorAll(".img-dot").forEach((d, di) => {
-          d.classList.toggle("active", di === idx);
-        });
-
-        // Update displayed image (and reposition card on desktop)
-        const probe = new Image();
-        probe.onload = () => {
-          img.src = src;
-          if (!isMobile) {
-            const off = pickOffset(probe.naturalWidth, probe.naturalHeight, project);
-            card.style.left = `${baseCX + off.x}px`;
-            card.style.top  = `${baseCY + off.y}px`;
-          }
-        };
-        probe.src = src;
-      }
-
-      project.images.forEach((src, idx) => {
-        const dot = document.createElement("div");
-        dot.classList.add("img-dot");
-
-        if (idx === 0) dot.classList.add("active");
-
-        dot.addEventListener("click", (e) => {
-          e.stopPropagation();
-          setActiveImage(idx);
-        });
-
-        dotsEl.appendChild(dot);
-      });
-
-      card.appendChild(wrap);
-      card.appendChild(dotsEl);
-
-      // Pass setActiveImage as the onClose callback so _closeViewer
-      // can sync the viewer's final slide index back to this card.
-      card.addEventListener("click", (e) => {
-        if (e.target.closest(".img-dot")) return;
-        openProject(project, activeDotIndex, setActiveImage);
-      });
-
-      return card;
+    if (viewer.classList.contains("active")) {
+      if (event.key === "ArrowRight") nextSlide();
+      if (event.key === "ArrowLeft") prevSlide();
+      if (event.key === "Escape") closeViewer();
+      return;
     }
 
-    // --------------------
-    // MOBILE LAYOUT
-    // --------------------
+    if (!isGalleryPage) return;
 
-    if (isMobile) {
+    const scrollStep = Math.round(window.innerHeight);
 
+    if (event.key === "ArrowDown" || event.key === "PageDown") {
+      event.preventDefault();
+      if (isMobile) {
+        window.scrollBy({ top: scrollStep, behavior: "smooth" });
+      } else if (scrollContainer) {
+        scrollContainer.scrollBy({ top: scrollStep, behavior: "smooth" });
+      }
+    }
+
+    if (event.key === "ArrowUp" || event.key === "PageUp") {
+      event.preventDefault();
+      if (isMobile) {
+        window.scrollBy({ top: -scrollStep, behavior: "smooth" });
+      } else if (scrollContainer) {
+        scrollContainer.scrollBy({ top: -scrollStep, behavior: "smooth" });
+      }
+    }
+
+    if (event.key === "Home") {
+      event.preventDefault();
+      if (isMobile) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else if (scrollContainer) {
+        scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    if (event.key === "End") {
+      event.preventDefault();
+      if (isMobile) {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      } else if (scrollContainer) {
+        scrollContainer.scrollTo({
+          top: scrollContainer.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+    }
+  });
+
+  viewer.addEventListener(
+    "touchstart",
+    (event) => {
+      touchStartX = event.touches[0].clientX;
+    },
+    { passive: true },
+  );
+
+  if (viewer && isMobile) {
+    viewer.addEventListener(
+      "touchstart",
+      (e) => {
+        const touch = e.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+      },
+      { passive: true },
+    );
+
+    viewer.addEventListener(
+      "touchend",
+      (e) => {
+        if (!viewer.classList.contains("active")) return;
+
+        const touch = e.changedTouches[0];
+        const diffX = touchStartX - touch.clientX;
+        const diffY = touchStartY - touch.clientY;
+
+        const absX = Math.abs(diffX);
+        const absY = Math.abs(diffY);
+
+        const threshold = 40;
+
+        // 👉 swipe UP only → close viewer
+        if (diffY > threshold && absY > absX) {
+          closeViewer();
+          return;
+        }
+
+        // 👉 horizontal swipe → navigate
+        if (absX > absY && absX > threshold) {
+          if (diffX > 0) nextSlide();
+          else prevSlide();
+        }
+      },
+      { passive: true },
+    );
+  }
+
+  viewer.addEventListener(
+    "touchend",
+    (event) => {
+      const diff = touchStartX - event.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) {
+        diff > 0 ? nextSlide() : prevSlide();
+      }
+    },
+    { passive: true },
+  );
+
+  viewer.addEventListener(
+    "wheel",
+    (event) => {
+      if (!viewer.classList.contains("active")) return;
+      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+        event.preventDefault();
+        if (event.deltaX > 30) nextSlide();
+        else if (event.deltaX < -30) prevSlide();
+      }
+    },
+    { passive: false },
+  );
+
+  const onScroll = () => {
+    if (!scrollHint) return;
+    const scrollTop = isMobile ? window.scrollY : scrollContainer.scrollTop;
+    scrollHint.classList.toggle("visible", scrollTop < 50);
+  };
+
+  if (scrollContainer) scrollContainer.addEventListener("scroll", onScroll);
+  window.addEventListener("scroll", onScroll);
+  onScroll();
+}
+
+function createCard(project, baseCenterX, baseCenterY) {
+  const card = document.createElement("div");
+  card.classList.add("project-card");
+
+  if (!isMobile) {
+    card.style.position = "absolute";
+    card.style.transform = "translate(-50%, -50%)";
+    card.style.left = `${baseCenterX}px`;
+    card.style.top = `${baseCenterY}px`;
+  }
+
+  const wrap = document.createElement("div");
+  wrap.classList.add("project-img-wrap");
+
+  if (!isMobile && project.maxWidth) wrap.style.maxWidth = project.maxWidth;
+  if (!isMobile && project.maxHeight) wrap.style.maxHeight = project.maxHeight;
+
+  const img = document.createElement("img");
+  img.classList.add("project-img");
+  img.alt = project.name;
+
+  if (!isMobile && project.maxWidth) img.style.maxWidth = project.maxWidth;
+  if (!isMobile && project.maxHeight) img.style.maxHeight = project.maxHeight;
+
+  img.addEventListener("load", () => {
+    if (!isMobile) {
+      const offset = pickOffset(img.naturalWidth, img.naturalHeight, project);
+      card.style.left = `${baseCenterX + offset.x}px`;
+      card.style.top = `${baseCenterY + offset.y}px`;
+    }
+  });
+
+  img.src = project.cover;
+
+  const caption = document.createElement("div");
+  caption.classList.add("img-caption");
+  caption.innerHTML = `
+    <div class="img-caption-line1">
+      ${project.name}${project.location ? `, ${project.location}` : ""}
+    </div>
+    <div class="img-caption-line2">
+      ${project.author || ""}
+    </div>
+  `;
+
+  wrap.appendChild(img);
+  wrap.appendChild(caption);
+
+  const dotsEl = document.createElement("div");
+  dotsEl.classList.add("img-dots");
+
+  let activeDotIndex = 0;
+
+  function setActiveImage(index) {
+    activeDotIndex = index;
+    const src = project.images[index];
+
+    dotsEl.querySelectorAll(".img-dot").forEach((dot, dotIndex) => {
+      dot.classList.toggle("active", dotIndex === index);
+    });
+
+    const probe = new Image();
+    probe.onload = () => {
+      img.src = src;
+      if (!isMobile) {
+        const offset = pickOffset(
+          probe.naturalWidth,
+          probe.naturalHeight,
+          project,
+        );
+        card.style.left = `${baseCenterX + offset.x}px`;
+        card.style.top = `${baseCenterY + offset.y}px`;
+      }
+    };
+    probe.src = src;
+  }
+
+  project.images.forEach((_, index) => {
+    const dot = document.createElement("button");
+    dot.classList.add("img-dot");
+    dot.type = "button";
+    dot.setAttribute(
+      "aria-label",
+      `Show image ${index + 1} of ${project.images.length}`,
+    );
+
+    if (index === 0) dot.classList.add("active");
+
+    dot.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setActiveImage(index);
+    });
+
+    dotsEl.appendChild(dot);
+  });
+
+  card.appendChild(wrap);
+  card.appendChild(dotsEl);
+
+  card.addEventListener("click", (event) => {
+    if (event.target.closest(".img-dot")) return;
+    openProject(project, activeDotIndex, setActiveImage);
+  });
+
+  return card;
+}
+
+function renderMobileLayout(projects) {
   const section = document.createElement("div");
   section.classList.add("gallery-section", "mobile-columns");
 
-  const leftCol = document.createElement("div");
-  leftCol.classList.add("mobile-column");
+  const leftColumn = document.createElement("div");
+  leftColumn.classList.add("mobile-column");
 
-  const rightCol = document.createElement("div");
-  rightCol.classList.add("mobile-column");
+  const rightColumn = document.createElement("div");
+  rightColumn.classList.add("mobile-column");
 
   projects.forEach((project, index) => {
-
     const card = createCard(project);
-
-    if (index % 2 === 0) {
-      leftCol.appendChild(card);
-    } else {
-      rightCol.appendChild(card);
-    }
-
+    (index % 2 === 0 ? leftColumn : rightColumn).appendChild(card);
   });
 
-  section.appendChild(leftCol);
-  section.appendChild(rightCol);
-
+  section.appendChild(leftColumn);
+  section.appendChild(rightColumn);
   scrollContainer.appendChild(section);
-
 }
 
-    // --------------------
-    // DESKTOP LAYOUT
-    // --------------------
+function renderDesktopLayout(projects) {
+  for (let index = 0; index < projects.length; index += 2) {
+    const pair = projects.slice(index, index + 2);
 
-    else {
+    const section = document.createElement("div");
+    section.classList.add("gallery-section");
 
-      for (let i = 0; i < projects.length; i += 2) {
+    pair.forEach((project, pairIndex) => {
+      const baseCenterX =
+        pairIndex === 0 ? window.innerWidth * 0.27 : window.innerWidth * 0.73;
+      const baseCenterY = window.innerHeight * 0.5;
+      const card = createCard(project, baseCenterX, baseCenterY);
+      section.appendChild(card);
+    });
 
-        const pair = projects.slice(i, i + 2);
+    scrollContainer.appendChild(section);
+  }
+}
 
-        const section = document.createElement("div");
-        section.classList.add("gallery-section");
+function initGalleryPage() {
+  if (!isGalleryPage) return;
 
-        pair.forEach((project, pairIdx) => {
+  setupGalleryEvents();
+  showLoader();
 
-          const baseCX =
-            pairIdx === 0
-              ? window.innerWidth * 0.27
-              : window.innerWidth * 0.73;
+  fetch("gallery.json")
+    .then((response) => {
+      if (!response.ok) throw new Error("Failed to load gallery data.");
+      return response.json();
+    })
+    .then((projects) =>
+      preloadImages(projects.map((project) => project.cover)).then(
+        () => projects,
+      ),
+    )
+    .then((projects) => {
+      if (isMobile) renderMobileLayout(projects);
+      else renderDesktopLayout(projects);
 
-          const baseCY = window.innerHeight * 0.5;
-
-          const card = createCard(project, baseCX, baseCY);
-
-          section.appendChild(card);
-        });
-
-        scrollContainer.appendChild(section);
+      const lastSection = scrollContainer.querySelector(
+        ".gallery-section:last-child",
+      );
+      if (footer) {
+        if (isMobile) scrollContainer.appendChild(footer);
+        else if (lastSection) lastSection.appendChild(footer);
       }
 
-    }
+      hideLoader();
+    })
+    .catch((error) => {
+      console.error("Could not load gallery data:", error);
+      hideLoader();
+    });
+}
 
-    const lastSection = scrollContainer.querySelector(".gallery-section:last-child");
-
-    if (isMobile) {
-      scrollContainer.appendChild(footer); // appends after all sections
-    } else {
-      if (lastSection) lastSection.appendChild(footer); // desktop: inside last section
-    }
-    
-    hideLoader();
-  })
-  .catch((err) => console.error("Could not load gallery.json:", err));
+setupCursor();
+setupContactLink();
+initGalleryPage();
