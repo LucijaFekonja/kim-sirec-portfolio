@@ -15,10 +15,13 @@
   <body>
     <div class="custom-cursor" id="cursor"></div>
 
-    <a class="mobile-contact-btn" href="contact.html" aria-label="Open contact page">
-      <img src="icons/email.png" alt="Email" width="16" height="16" />
-    </a>
-
+    <button class="mobile-contact-btn" id="mobileInfoBtn" type="button" aria-label="Open contact page">
+      <span class="mobile-info-text">info</span>
+      <span class="mobile-info-dot"></span>
+    </button>
+    
+    <div class="page-transition-circle" id="pageTransitionCircle" aria-hidden="true"></div>
+    
     <div class="scroll-hint" id="scrollHint" aria-hidden="true">
       <img src="icons/arrow-down_128.png" alt="" width="20" height="20" />
     </div>

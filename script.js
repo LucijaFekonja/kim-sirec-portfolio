@@ -6,6 +6,9 @@ const footer = document.querySelector(".footer");
 const scrollHint = document.getElementById("scrollHint");
 const headerInner = document.querySelector(".header-inner");
 const loader = document.getElementById("loader");
+const mobileInfoBtn = document.getElementById("mobileInfoBtn");
+const pageTransitionCircle = document.getElementById("pageTransitionCircle");
+
 const isMobile = window.innerWidth <= 768;
 const isGalleryPage = Boolean(scrollContainer && viewer && titleContainer);
 
@@ -60,6 +63,23 @@ function setupContactLink() {
       event.preventDefault();
       goToContact();
     }
+  });
+}
+
+function setupMobileContactTransition() {
+  if (!mobileInfoBtn || !pageTransitionCircle) return;
+
+  mobileInfoBtn.addEventListener("click", () => {
+    if (window.innerWidth > 768) {
+      window.location.href = "contact.html";
+      return;
+    }
+
+    pageTransitionCircle.classList.add("active");
+
+    window.setTimeout(() => {
+      window.location.href = "contact.html";
+    }, 650);
   });
 }
 
@@ -119,6 +139,8 @@ function openProject(project, startIndex = 0, onClose = null) {
 
   viewerTrack = document.createElement("div");
   viewerTrack.classList.add("viewer-track");
+
+  document.body.classList.add("viewer-open");
 
   currentImages.forEach((src, index) => {
     const slide = document.createElement("div");
@@ -191,6 +213,8 @@ function forceCloseViewer() {
     currentCardSync(currentIndex);
     currentCardSync = null;
   }
+
+  document.body.classList.remove("viewer-open");
 
   viewer.classList.remove("active");
   viewer.innerHTML = "";
@@ -549,6 +573,7 @@ function initGalleryPage() {
 
   setupGalleryEvents();
   showLoader();
+  setupMobileContactTransition();
 
   fetch("gallery.json")
     .then((response) => {

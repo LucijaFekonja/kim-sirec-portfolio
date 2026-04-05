@@ -27,6 +27,11 @@ body {
   font-weight: 400;
 }
 
+body.viewer-open {
+  overflow: hidden;
+  height: 100vh;
+}
+
 #cursor {
   position: fixed;
   width: 9px;
@@ -98,6 +103,10 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: auto;
+}
+
+body.viewer-open #scrollContainer {
+  overflow: hidden;
 }
 
 .mobile-contact-btn {
@@ -185,6 +194,26 @@ body {
 .contact-links a:hover svg,
 .contact-links a:focus-visible svg {
   color: var(--hover-muted);
+}
+
+.page-transition-circle {
+  position: fixed;
+  top: 27px;
+  right: 20px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #000;
+  transform: translate(50%, -50%) scale(0);
+  transform-origin: center;
+  z-index: 5000;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.page-transition-circle.active {
+  transition: transform 0.7s cubic-bezier(0.76, 0, 0.24, 1);
+  transform: translate(50%, -50%) scale(180);
 }
 
 .gallery-section {
@@ -514,6 +543,10 @@ body {
     height: auto;
   }
 
+  body.viewer-open {
+    overscroll-behavior: none;
+  }
+
   #scrollContainer {
     height: auto;
     overflow-y: visible;
@@ -529,7 +562,7 @@ body {
     background: var(--bg);
     display: flex;
     align-items: center;
-    padding-left: 16px;
+    padding-left: 20px;
     z-index: 1000;
   }
 
@@ -568,13 +601,58 @@ body {
   }
 
   .mobile-contact-btn {
-    display: block;
-    position: fixed;
-    top: 18px;
-    right: 20px;
-    z-index: 1000;
-    opacity: 0.5;
-  }
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: fixed;
+  top: 0;
+  right: 16px;
+  height: 54px;
+  z-index: 2000;
+  opacity: 1;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: #000;
+  font: inherit;
+  letter-spacing: 0.5px;
+}
+
+body.contact-dark {
+  --bg: #000;
+  --text: #fff;
+  --muted: rgba(255, 255, 255, 0.65);
+  --hover-muted: #fff;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body.contact-dark #cursor {
+  background: #fff;
+}
+
+body.contact-dark .contact-x {
+  opacity: 0.6;
+}
+
+body.contact-dark .contact-x img,
+body.contact-dark .contact-x svg {
+  filter: invert(1);
+}
+
+.mobile-info-text {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.mobile-info-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #000;
+  display: inline-block;
+  flex: 0 0 14px;
+}
 
   .contact-x {
     top: 20px;
