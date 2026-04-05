@@ -8,6 +8,7 @@ const headerInner = document.querySelector(".header-inner");
 const loader = document.getElementById("loader");
 const mobileInfoBtn = document.getElementById("mobileInfoBtn");
 const pageTransitionCircle = document.getElementById("pageTransitionCircle");
+const contactTransitionOverlay = document.getElementById("contactTransitionOverlay");
 
 const isMobile = window.innerWidth <= 768;
 const isGalleryPage = Boolean(scrollContainer && viewer && titleContainer);
@@ -67,7 +68,7 @@ function setupContactLink() {
 }
 
 function setupMobileContactTransition() {
-  if (!mobileInfoBtn || !pageTransitionCircle) return;
+  if (!mobileInfoBtn || !pageTransitionCircle || !contactTransitionOverlay) return;
 
   mobileInfoBtn.addEventListener("click", () => {
     if (window.innerWidth > 768) {
@@ -75,11 +76,19 @@ function setupMobileContactTransition() {
       return;
     }
 
+    document.body.classList.add("viewer-open"); // reuse your scroll lock
+    contactTransitionOverlay.classList.add("active");
     pageTransitionCircle.classList.add("active");
 
+    // reveal text and X slightly after the expansion starts
+    window.setTimeout(() => {
+      contactTransitionOverlay.classList.add("reveal");
+    }, 180);
+
+    // navigate after the transition has played
     window.setTimeout(() => {
       window.location.href = "contact.html";
-    }, 650);
+    }, 780);
   });
 }
 

@@ -198,10 +198,10 @@ body.viewer-open #scrollContainer {
 
 .page-transition-circle {
   position: fixed;
-  top: 27px;
+  top: 32px;
   right: 20px;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: #000;
   transform: translate(50%, -50%) scale(0);
@@ -212,8 +212,96 @@ body.viewer-open #scrollContainer {
 }
 
 .page-transition-circle.active {
-  transition: transform 0.7s cubic-bezier(0.76, 0, 0.24, 1);
-  transform: translate(50%, -50%) scale(180);
+  transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+  transform: translate(50%, -50%) scale(190);
+}
+
+.contact-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5001;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.contact-transition-overlay.active {
+  opacity: 1;
+}
+
+.contact-transition-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.contact-transition-overlay.reveal .contact-transition-content {
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.contact-transition-overlay .contact-bio,
+.contact-transition-overlay .contact-links a,
+.contact-transition-overlay .contact-links svg {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.contact-transition-overlay .contact-links a:hover,
+.contact-transition-overlay .contact-links a:focus-visible,
+.contact-transition-overlay .contact-links a:hover svg,
+.contact-transition-overlay .contact-links a:focus-visible svg {
+  color: #fff;
+}
+
+.contact-transition-overlay .contact-break-line {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.contact-transition-x {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  z-index: 5002;
+  opacity: 0;
+  transform: scale(0.4) rotate(-90deg);
+}
+
+.contact-transition-x span {
+  position: absolute;
+  top: 9px;
+  left: 0;
+  width: 20px;
+  height: 1.5px;
+  background: #fff;
+  transform-origin: center;
+}
+
+.contact-transition-x span:first-child {
+  transform: rotate(45deg);
+}
+
+.contact-transition-x span:last-child {
+  transform: rotate(-45deg);
+}
+
+.contact-transition-overlay.reveal .contact-transition-x {
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  opacity: 0.7;
+  transform: scale(1) rotate(0deg);
 }
 
 .gallery-section {
@@ -251,7 +339,7 @@ body.viewer-open #scrollContainer {
 
 .img-caption {
   position: absolute;
-  top: calc(100% + 35px);  /* 15 */
+  top: calc(100% + 35px); /* 15 */
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
@@ -601,58 +689,58 @@ body.viewer-open #scrollContainer {
   }
 
   .mobile-contact-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  position: fixed;
-  top: 0;
-  right: 16px;
-  height: 54px;
-  z-index: 2000;
-  opacity: 1;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  color: #000;
-  font: inherit;
-  letter-spacing: 0.5px;
-}
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: fixed;
+    top: 0;
+    right: 20px;
+    height: 64px;
+    z-index: 2000;
+    opacity: 1;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: #000;
+    font: inherit;
+    letter-spacing: 0.5px;
+  }
 
-body.contact-dark {
-  --bg: #000;
-  --text: #fff;
-  --muted: rgba(255, 255, 255, 0.65);
-  --hover-muted: #fff;
-  background: var(--bg);
-  color: var(--text);
-}
+  .mobile-info-text {
+    font-size: 10px;
+    line-height: 1;
+  }
 
-body.contact-dark #cursor {
-  background: #fff;
-}
+  .mobile-info-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #000;
+    display: inline-block;
+    flex: 0 0 16px;
+  }
 
-body.contact-dark .contact-x {
-  opacity: 0.6;
-}
+  body.contact-dark {
+    --bg: #000;
+    --text: #fff;
+    --muted: rgba(255, 255, 255, 0.65);
+    --hover-muted: #fff;
+    background: var(--bg);
+    color: var(--text);
+  }
 
-body.contact-dark .contact-x img,
-body.contact-dark .contact-x svg {
-  filter: invert(1);
-}
+  body.contact-dark #cursor {
+    background: #fff;
+  }
 
-.mobile-info-text {
-  font-size: 12px;
-  line-height: 1;
-}
+  body.contact-dark .contact-x {
+    opacity: 0.6;
+  }
 
-.mobile-info-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #000;
-  display: inline-block;
-  flex: 0 0 14px;
-}
+  body.contact-dark .contact-x img,
+  body.contact-dark .contact-x svg {
+    filter: invert(1);
+  }
 
   .contact-x {
     top: 20px;
