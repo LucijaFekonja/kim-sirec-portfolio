@@ -279,7 +279,7 @@ body.viewer-open #scrollContainer {
   justify-content: center;
   color: #fff;
   opacity: 0;
-  transform: translateY(16px);
+  /* transform: translateY(16px); */
   text-align: center;
 }
 
