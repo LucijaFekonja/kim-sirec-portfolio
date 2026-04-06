@@ -12,43 +12,66 @@
       rel="stylesheet"
     />
   </head>
-  <body class="contact-dark">
-    <div class="custom-cursor" id="cursor"></div>
+  <body>
+  <div class="custom-cursor" id="cursor"></div>
 
-    <a class="contact-x" href="index.html" aria-label="Back to homepage">
-      <img src="icons/close_aaa.png" alt="Close" width="20" height="20" />
-    </a>
+  <a class="contact-x" href="index.html" aria-label="Back to homepage">
+    <span></span>
+    <span></span>
+  </a>
 
-    <main class="contact-page active">
-      <div class="contact-content">
-        <h1 class="contact-name">Kim Širec</h1>
-        <p class="contact-bio">
-          photography portfolio focused on architecture, interiors, and spatial detail
-        </p>
-        <p class="contact-break-line"></p>
-        <div class="contact-links">
-          <a href="mailto:kim.sirec100@gmail.com">kim.sirec100@gmail.com</a>
-          <a href="https://instagram.com/sladkomleko/" target="_blank" rel="noreferrer" aria-label="Instagram">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-              <circle cx="12" cy="12" r="4" />
-              <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
-            </svg>
-          </a>
-        </div>
+  <div
+    class="page-transition-circle reverse"
+    id="pageTransitionCircleReverse"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="contact-transition-overlay reverse"
+    id="contactTransitionOverlayReverse"
+    aria-hidden="true"
+  >
+    <div class="contact-transition-x" id="contactTransitionXReverse">
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <main class="contact-page">
+    <div class="contact-content">
+      <h1 class="contact-name">Kim Širec</h1>
+      <p class="contact-bio">
+        photography portfolio focused on architecture, interiors, and spatial detail
+      </p>
+      <p class="contact-break-line"></p>
+      <div class="contact-links">
+        <a href="mailto:kim.sirec100@gmail.com">kim.sirec100@gmail.com</a>
+        <a
+          href="https://instagram.com/sladkomleko/"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Instagram"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
+          </svg>
+        </a>
       </div>
-    </main>
+    </div>
+  </main>
 
-    <script src="script.js"></script>
-  </body>
+  <script src="script.js"></script>
+</body>
 </html>

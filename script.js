@@ -6,103 +6,103 @@ const footer = document.querySelector(".footer");
 const scrollHint = document.getElementById("scrollHint");
 const headerInner = document.querySelector(".header-inner");
 const loader = document.getElementById("loader");
+const loaderBar = document.getElementById("loaderBar");
+
 const mobileInfoBtn = document.getElementById("mobileInfoBtn");
 const pageTransitionCircle = document.getElementById("pageTransitionCircle");
 const contactTransitionOverlay = document.getElementById("contactTransitionOverlay");
 
-const isMobile = window.innerWidth <= 768;
+const contactCloseBtn = document.querySelector(".contact-x");
+const pageTransitionCircleReverse = document.getElementById("pageTransitionCircleReverse");
+const contactTransitionOverlayReverse = document.getElementById("contactTransitionOverlayReverse");
+
 const isGalleryPage = Boolean(scrollContainer && viewer && titleContainer);
+const isContactPage = Boolean(document.querySelector(".contact-page") && !isGalleryPage);
 
-let viewerTrack = null;
-let currentImages = [];
 let currentIndex = 0;
+let currentImages = [];
 let currentCardSync = null;
+let viewerTrack = null;
 let touchStartX = 0;
+let touchStartY = 0;
 
+function isMobileViewport() {
+  return window.innerWidth <= 768;
+}
+
+// --------------------
+// LOADER
+// --------------------
 function showLoader() {
   if (loader) loader.classList.add("active");
 }
 
 function hideLoader() {
-  if (loader) loader.classList.remove("active");
+  if (loader) {
+    if (loaderBar) loaderBar.style.width = "100%";
+    window.setTimeout(() => {
+      loader.classList.remove("active");
+    }, 120);
+  }
 }
 
+// --------------------
+// CUSTOM CURSOR
+// --------------------
 function setupCursor() {
-  if (!cursor) return;
+  if (!cursor || isMobileViewport()) return;
 
-  document.addEventListener("mousemove", (event) => {
-    cursor.style.left = `${event.clientX}px`;
-    cursor.style.top = `${event.clientY}px`;
+  document.addEventListener("mousemove", (e) => {
+    cursor.style.left = `${e.clientX}px`;
+    cursor.style.top = `${e.clientY}px`;
   });
 
-  const isCursorTarget = (element) =>
-    Boolean(
-      element?.closest(
-        ".project-card, .viewer-arrow, a, button, .header-inner, .img-dot",
-      ),
-    );
+  const interactiveSelector =
+    ".project-card, .viewer-arrow, a, button, .header-inner, .img-dot, .contact-x";
 
-  document.addEventListener("mouseover", (event) => {
-    if (isCursorTarget(event.target)) cursor.classList.add("hovering");
+  document.addEventListener("mouseover", (e) => {
+    if (e.target.closest(interactiveSelector)) {
+      cursor.classList.add("hovering");
+    }
   });
 
-  document.addEventListener("mouseout", (event) => {
-    if (isCursorTarget(event.target)) cursor.classList.remove("hovering");
+  document.addEventListener("mouseout", (e) => {
+    if (e.target.closest(interactiveSelector)) {
+      cursor.classList.remove("hovering");
+    }
   });
 }
 
+// --------------------
+// CONTACT LINK DESKTOP
+// --------------------
 function setupContactLink() {
   if (!headerInner) return;
 
   const goToContact = () => {
+    if (isMobileViewport()) return;
     window.location.href = "contact.html";
   };
 
   headerInner.addEventListener("click", goToContact);
-  headerInner.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
+  headerInner.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
       goToContact();
     }
   });
 }
 
-function setupMobileContactTransition() {
-  if (!mobileInfoBtn || !pageTransitionCircle || !contactTransitionOverlay) return;
-
-  mobileInfoBtn.addEventListener("click", () => {
-    if (window.innerWidth > 768) {
-      window.location.href = "contact.html";
-      return;
-    }
-
-    document.body.classList.add("viewer-open"); // reuse your scroll lock
-    contactTransitionOverlay.classList.add("active");
-    pageTransitionCircle.classList.add("active");
-
-    // reveal text and X slightly after the expansion starts
-    window.setTimeout(() => {
-      contactTransitionOverlay.classList.add("reveal");
-    }, 180);
-
-    // navigate after the transition has played
-    window.setTimeout(() => {
-      window.location.href = "contact.html";
-    }, 780);
-  });
-}
-
+// --------------------
+// VIEWER
+// --------------------
 function updateViewerSlide() {
   if (!viewerTrack) return;
 
   const slides = viewerTrack.querySelectorAll(".viewer-slide");
 
   slides.forEach((slide, index) => {
-    if (index === currentIndex) {
-      slide.classList.add("active");
-    } else {
-      slide.classList.remove("active");
-    }
+    slide.classList.toggle("active", index === currentIndex);
   });
 
   const leftArrow = viewer.querySelector(".viewer-arrow.left");
@@ -114,10 +114,9 @@ function updateViewerSlide() {
   }
 
   if (rightArrow) {
-    rightArrow.style.opacity =
-      currentIndex === currentImages.length - 1 ? "0" : "1";
-    rightArrow.style.pointerEvents =
-      currentIndex === currentImages.length - 1 ? "none" : "auto";
+    const isLast = currentIndex === currentImages.length - 1;
+    rightArrow.style.opacity = isLast ? "0" : "1";
+    rightArrow.style.pointerEvents = isLast ? "none" : "auto";
   }
 }
 
@@ -138,26 +137,25 @@ function prevSlide() {
 function openProject(project, startIndex = 0, onClose = null) {
   if (!viewer || !titleContainer) return;
 
-  viewer.innerHTML = "";
-  viewer.classList.add("active");
-  history.pushState({ viewerOpen: true }, "");
-
-  currentImages = project.images || [];
+  currentImages = Array.isArray(project.images) ? project.images : [];
   currentIndex = startIndex;
   currentCardSync = onClose;
+
+  viewer.innerHTML = "";
+  viewer.classList.add("active");
+  document.body.classList.add("viewer-open");
+
+  if (!history.state || !history.state.viewerOpen) {
+    history.pushState({ viewerOpen: true }, "");
+  }
 
   viewerTrack = document.createElement("div");
   viewerTrack.classList.add("viewer-track");
 
-  document.body.classList.add("viewer-open");
-
   currentImages.forEach((src, index) => {
     const slide = document.createElement("div");
     slide.classList.add("viewer-slide");
-
-    if (index === currentIndex) {
-      slide.classList.add("active");
-    }
+    if (index === currentIndex) slide.classList.add("active");
 
     const img = document.createElement("img");
     img.src = src;
@@ -170,23 +168,22 @@ function openProject(project, startIndex = 0, onClose = null) {
   viewer.appendChild(viewerTrack);
 
   const leftArrow = document.createElement("button");
-  leftArrow.classList.add("viewer-arrow", "left");
+  leftArrow.className = "viewer-arrow left";
   leftArrow.type = "button";
   leftArrow.setAttribute("aria-label", "Previous image");
   leftArrow.innerHTML = "&#8249;";
-  leftArrow.addEventListener("click", (event) => {
-    event.stopPropagation();
+  leftArrow.addEventListener("click", (e) => {
+    e.stopPropagation();
     prevSlide();
   });
 
   const rightArrow = document.createElement("button");
-  rightArrow.classList.add("viewer-arrow", "right");
+  rightArrow.className = "viewer-arrow right";
   rightArrow.type = "button";
   rightArrow.setAttribute("aria-label", "Next image");
   rightArrow.innerHTML = "&#8250;";
-  rightArrow.addEventListener("click", (event) => {
-    console.log(currentIndex);
-    event.stopPropagation();
+  rightArrow.addEventListener("click", (e) => {
+    e.stopPropagation();
     nextSlide();
   });
 
@@ -206,15 +203,6 @@ function openProject(project, startIndex = 0, onClose = null) {
   updateViewerSlide();
 }
 
-function closeViewer() {
-  if (history.state?.viewerOpen) {
-    history.back();
-    return;
-  }
-
-  forceCloseViewer();
-}
-
 function forceCloseViewer() {
   if (!viewer || !titleContainer) return;
 
@@ -223,248 +211,189 @@ function forceCloseViewer() {
     currentCardSync = null;
   }
 
-  document.body.classList.remove("viewer-open");
-
   viewer.classList.remove("active");
   viewer.innerHTML = "";
-  titleContainer.textContent = "";
+  titleContainer.innerHTML = "";
   titleContainer.classList.remove("active");
-
   viewerTrack = null;
   currentImages = [];
   currentIndex = 0;
+  document.body.classList.remove("viewer-open");
 }
 
-function pickOffset(naturalWidth, naturalHeight, project) {
-  if (isMobile) return project.offsetMobile || { x: 0, y: 0 };
-
-  const isPortraitPhoto = naturalHeight > naturalWidth;
-  return isPortraitPhoto
-    ? project.offsetPortrait || project.offsetLandscape || { x: 0, y: 0 }
-    : project.offsetLandscape || { x: 0, y: 0 };
+function closeViewer() {
+  if (history.state?.viewerOpen) {
+    history.back();
+    return;
+  }
+  forceCloseViewer();
 }
 
-function preloadImages(urls) {
-  const bar = document.getElementById("loaderBar");
-  let loaded = 0;
-  const total = Math.max(urls.length, 1);
+window.addEventListener("popstate", () => {
+  if (viewer && viewer.classList.contains("active")) {
+    forceCloseViewer();
+  }
+});
 
-  return Promise.all(
-    urls.map(
-      (src) =>
-        new Promise((resolve) => {
-          const img = new Image();
-          img.onload = img.onerror = () => {
-            loaded += 1;
-            if (bar) {
-              bar.style.width = `${Math.round((loaded / total) * 100)}%`;
-            }
-            resolve();
-          };
-          img.src = src;
-        }),
-    ),
-  );
-}
-
-function setupGalleryEvents() {
+function setupViewerInteractions() {
   if (!viewer) return;
 
-  window.addEventListener("popstate", () => {
-    if (viewer.classList.contains("active")) forceCloseViewer();
-  });
-
-  viewer.addEventListener("click", (event) => {
-    if (
-      !event.target.closest(".viewer-slide img") &&
-      !event.target.closest(".viewer-arrow")
-    ) {
+  viewer.addEventListener("click", (e) => {
+    if (!e.target.closest(".viewer-slide img") && !e.target.closest(".viewer-arrow")) {
       closeViewer();
-    }
-  });
-
-  document.addEventListener("keydown", (event) => {
-    const tagName = document.activeElement?.tagName;
-    const isTypingTarget =
-      document.activeElement?.isContentEditable ||
-      tagName === "INPUT" ||
-      tagName === "TEXTAREA" ||
-      tagName === "SELECT";
-
-    if (isTypingTarget) return;
-
-    if (viewer.classList.contains("active")) {
-      if (event.key === "ArrowRight") nextSlide();
-      if (event.key === "ArrowLeft") prevSlide();
-      if (event.key === "Escape") closeViewer();
-      return;
-    }
-
-    if (!isGalleryPage) return;
-
-    const scrollStep = Math.round(window.innerHeight);
-
-    if (event.key === "ArrowDown" || event.key === "PageDown") {
-      event.preventDefault();
-      if (isMobile) {
-        window.scrollBy({ top: scrollStep, behavior: "smooth" });
-      } else if (scrollContainer) {
-        scrollContainer.scrollBy({ top: scrollStep, behavior: "smooth" });
-      }
-    }
-
-    if (event.key === "ArrowUp" || event.key === "PageUp") {
-      event.preventDefault();
-      if (isMobile) {
-        window.scrollBy({ top: -scrollStep, behavior: "smooth" });
-      } else if (scrollContainer) {
-        scrollContainer.scrollBy({ top: -scrollStep, behavior: "smooth" });
-      }
-    }
-
-    if (event.key === "Home") {
-      event.preventDefault();
-      if (isMobile) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else if (scrollContainer) {
-        scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
-      }
-    }
-
-    if (event.key === "End") {
-      event.preventDefault();
-      if (isMobile) {
-        window.scrollTo({
-          top: document.body.scrollHeight,
-          behavior: "smooth",
-        });
-      } else if (scrollContainer) {
-        scrollContainer.scrollTo({
-          top: scrollContainer.scrollHeight,
-          behavior: "smooth",
-        });
-      }
     }
   });
 
   viewer.addEventListener(
     "touchstart",
-    (event) => {
-      touchStartX = event.touches[0].clientX;
+    (e) => {
+      if (!isMobileViewport()) return;
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
     },
-    { passive: true },
+    { passive: true }
   );
-
-  if (viewer && isMobile) {
-    viewer.addEventListener(
-      "touchstart",
-      (e) => {
-        const touch = e.touches[0];
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
-      },
-      { passive: true },
-    );
-
-    viewer.addEventListener(
-      "touchend",
-      (e) => {
-        if (!viewer.classList.contains("active")) return;
-
-        const touch = e.changedTouches[0];
-        const diffX = touchStartX - touch.clientX;
-        const diffY = touchStartY - touch.clientY;
-
-        const absX = Math.abs(diffX);
-        const absY = Math.abs(diffY);
-
-        const threshold = 40;
-
-        // 👉 swipe UP only → close viewer
-        if (diffY > threshold && absY > absX) {
-          closeViewer();
-          return;
-        }
-
-        // 👉 horizontal swipe → navigate
-        if (absX > absY && absX > threshold) {
-          if (diffX > 0) nextSlide();
-          else prevSlide();
-        }
-      },
-      { passive: true },
-    );
-  }
 
   viewer.addEventListener(
     "touchend",
-    (event) => {
-      const diff = touchStartX - event.changedTouches[0].clientX;
-      if (Math.abs(diff) > 50) {
-        diff > 0 ? nextSlide() : prevSlide();
+    (e) => {
+      if (!viewer.classList.contains("active") || !isMobileViewport()) return;
+
+      const touch = e.changedTouches[0];
+      const diffX = touchStartX - touch.clientX;
+      const diffY = touchStartY - touch.clientY;
+      const absX = Math.abs(diffX);
+      const absY = Math.abs(diffY);
+      const threshold = 40;
+
+      if (diffY > threshold && absY > absX) {
+        closeViewer();
+        return;
+      }
+
+      if (absX > absY && absX > threshold) {
+        if (diffX > 0) nextSlide();
+        else prevSlide();
       }
     },
-    { passive: true },
+    { passive: true }
   );
 
   viewer.addEventListener(
     "wheel",
-    (event) => {
+    (e) => {
       if (!viewer.classList.contains("active")) return;
-      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
-        event.preventDefault();
-        if (event.deltaX > 30) nextSlide();
-        else if (event.deltaX < -30) prevSlide();
+
+      e.preventDefault();
+
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        if (e.deltaX > 20) nextSlide();
+        else if (e.deltaX < -20) prevSlide();
+      } else if (!isMobileViewport()) {
+        if (e.deltaY > 20) nextSlide();
+        else if (e.deltaY < -20) prevSlide();
       }
     },
-    { passive: false },
+    { passive: false }
   );
-
-  const onScroll = () => {
-    if (!scrollHint) return;
-    const scrollTop = isMobile ? window.scrollY : scrollContainer.scrollTop;
-    scrollHint.classList.toggle("visible", scrollTop < 50);
-  };
-
-  if (scrollContainer) scrollContainer.addEventListener("scroll", onScroll);
-  window.addEventListener("scroll", onScroll);
-  onScroll();
 }
 
-function createCard(project, baseCenterX, baseCenterY) {
-  const card = document.createElement("div");
-  card.classList.add("project-card");
+// --------------------
+// KEYBOARD
+// --------------------
+document.addEventListener("keydown", (e) => {
+  if (viewer && viewer.classList.contains("active")) {
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      e.preventDefault();
+      nextSlide();
+      return;
+    }
 
-  if (!isMobile) {
-    card.style.position = "absolute";
-    card.style.transform = "translate(-50%, -50%)";
-    card.style.left = `${baseCenterX}px`;
-    card.style.top = `${baseCenterY}px`;
+    if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault();
+      prevSlide();
+      return;
+    }
+
+    if (e.key === "Escape") {
+      e.preventDefault();
+      closeViewer();
+      return;
+    }
   }
 
-  const wrap = document.createElement("div");
-  wrap.classList.add("project-img-wrap");
+  if (!isGalleryPage || isMobileViewport()) return;
+  if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
 
-  if (!isMobile && project.maxWidth) wrap.style.maxWidth = project.maxWidth;
-  if (!isMobile && project.maxHeight) wrap.style.maxHeight = project.maxHeight;
+  e.preventDefault();
 
-  const img = document.createElement("img");
-  img.classList.add("project-img");
-  img.alt = project.name;
+  const pageHeight = window.innerHeight;
+  const current = scrollContainer.scrollTop;
+  const maxScroll = scrollContainer.scrollHeight - scrollContainer.clientHeight;
 
-  if (!isMobile && project.maxWidth) img.style.maxWidth = project.maxWidth;
-  if (!isMobile && project.maxHeight) img.style.maxHeight = project.maxHeight;
+  let target = current;
 
-  img.addEventListener("load", () => {
-    if (!isMobile) {
-      const offset = pickOffset(img.naturalWidth, img.naturalHeight, project);
-      card.style.left = `${baseCenterX + offset.x}px`;
-      card.style.top = `${baseCenterY + offset.y}px`;
-    }
+  if (e.key === "ArrowDown") {
+    target = Math.min(Math.ceil((current + 1) / pageHeight) * pageHeight, maxScroll);
+  }
+
+  if (e.key === "ArrowUp") {
+    target = Math.max(Math.floor((current - 1) / pageHeight) * pageHeight, 0);
+  }
+
+  scrollContainer.scrollTo({
+    top: target,
+    behavior: "smooth",
   });
+});
 
-  img.src = project.cover;
+// --------------------
+// SCROLL UI
+// --------------------
+function onScroll() {
+  if (!scrollContainer) return;
 
+  const scrollTop = scrollContainer.scrollTop;
+  const scrollHeight = scrollContainer.scrollHeight;
+  const clientHeight = scrollContainer.clientHeight;
+
+  if (footer) {
+    if (scrollTop + clientHeight >= scrollHeight - 5) {
+      footer.classList.add("visible");
+    } else {
+      footer.classList.remove("visible");
+    }
+  }
+
+  if (scrollHint) {
+    if (scrollTop > 50) scrollHint.classList.remove("visible");
+    else scrollHint.classList.add("visible");
+  }
+}
+
+if (scrollContainer) {
+  scrollContainer.addEventListener("scroll", onScroll);
+}
+
+if (scrollHint && isGalleryPage && !isMobileViewport()) {
+  scrollHint.classList.add("visible");
+}
+
+// --------------------
+// GALLERY
+// --------------------
+function getOffset(project, ratio) {
+  if (isMobileViewport()) {
+    return project.offsetMobile || { x: 0, y: 0 };
+  }
+
+  if (ratio > 1 && project.offsetLandscape) return project.offsetLandscape;
+  if (ratio <= 1 && project.offsetPortrait) return project.offsetPortrait;
+  return { x: 0, y: 0 };
+}
+
+function createCaption(project) {
   const caption = document.createElement("div");
   caption.classList.add("img-caption");
   caption.innerHTML = `
@@ -475,7 +404,46 @@ function createCard(project, baseCenterX, baseCenterY) {
       ${project.author || ""}
     </div>
   `;
+  return caption;
+}
 
+function createCard(project, baseCX = 0, baseCY = 0) {
+  const card = document.createElement("div");
+  card.classList.add("project-card");
+
+  if (!isMobileViewport()) {
+    card.style.position = "absolute";
+    card.style.transform = "translate(-50%, -50%)";
+    card.style.left = `${baseCX}px`;
+    card.style.top = `${baseCY}px`;
+  }
+
+  const wrap = document.createElement("div");
+  wrap.classList.add("project-img-wrap");
+
+  if (!isMobileViewport() && project.maxWidth) wrap.style.maxWidth = project.maxWidth;
+  if (!isMobileViewport() && project.maxHeight) wrap.style.maxHeight = project.maxHeight;
+
+  const img = document.createElement("img");
+  img.classList.add("project-img");
+  img.alt = project.name;
+
+  if (!isMobileViewport() && project.maxWidth) img.style.maxWidth = project.maxWidth;
+  if (!isMobileViewport() && project.maxHeight) img.style.maxHeight = project.maxHeight;
+  if (isMobileViewport() && project.heightMobile) img.style.height = project.heightMobile;
+
+  img.addEventListener("load", () => {
+    if (!isMobileViewport()) {
+      const ratio = img.naturalWidth / img.naturalHeight;
+      const offset = getOffset(project, ratio);
+      card.style.left = `${baseCX + (offset.x || 0)}px`;
+      card.style.top = `${baseCY + (offset.y || 0)}px`;
+    }
+  });
+
+  img.src = project.cover;
+
+  const caption = createCaption(project);
   wrap.appendChild(img);
   wrap.appendChild(caption);
 
@@ -484,44 +452,38 @@ function createCard(project, baseCenterX, baseCenterY) {
 
   let activeDotIndex = 0;
 
-  function setActiveImage(index) {
-    activeDotIndex = index;
-    const src = project.images[index];
+  function setActiveImage(idx) {
+    activeDotIndex = idx;
+    const src = project.images[idx];
 
     dotsEl.querySelectorAll(".img-dot").forEach((dot, dotIndex) => {
-      dot.classList.toggle("active", dotIndex === index);
+      dot.classList.toggle("active", dotIndex === idx);
     });
 
     const probe = new Image();
     probe.onload = () => {
       img.src = src;
-      if (!isMobile) {
-        const offset = pickOffset(
-          probe.naturalWidth,
-          probe.naturalHeight,
-          project,
-        );
-        card.style.left = `${baseCenterX + offset.x}px`;
-        card.style.top = `${baseCenterY + offset.y}px`;
+
+      if (!isMobileViewport()) {
+        const ratio = probe.naturalWidth / probe.naturalHeight;
+        const offset = getOffset(project, ratio);
+        card.style.left = `${baseCX + (offset.x || 0)}px`;
+        card.style.top = `${baseCY + (offset.y || 0)}px`;
       }
     };
     probe.src = src;
   }
 
-  project.images.forEach((_, index) => {
+  (project.images || []).forEach((src, idx) => {
     const dot = document.createElement("button");
     dot.classList.add("img-dot");
     dot.type = "button";
-    dot.setAttribute(
-      "aria-label",
-      `Show image ${index + 1} of ${project.images.length}`,
-    );
+    dot.setAttribute("aria-label", `Show image ${idx + 1} for ${project.name}`);
+    if (idx === 0) dot.classList.add("active");
 
-    if (index === 0) dot.classList.add("active");
-
-    dot.addEventListener("click", (event) => {
-      event.stopPropagation();
-      setActiveImage(index);
+    dot.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setActiveImage(idx);
     });
 
     dotsEl.appendChild(dot);
@@ -530,90 +492,141 @@ function createCard(project, baseCenterX, baseCenterY) {
   card.appendChild(wrap);
   card.appendChild(dotsEl);
 
-  card.addEventListener("click", (event) => {
-    if (event.target.closest(".img-dot")) return;
+  card.addEventListener("click", (e) => {
+    if (e.target.closest(".img-dot")) return;
     openProject(project, activeDotIndex, setActiveImage);
   });
 
   return card;
 }
 
-function renderMobileLayout(projects) {
-  const section = document.createElement("div");
-  section.classList.add("gallery-section", "mobile-columns");
+function renderGallery(projects) {
+  if (!scrollContainer) return;
 
-  const leftColumn = document.createElement("div");
-  leftColumn.classList.add("mobile-column");
+  const gallery = document.getElementById("gallery") || scrollContainer;
 
-  const rightColumn = document.createElement("div");
-  rightColumn.classList.add("mobile-column");
-
-  projects.forEach((project, index) => {
-    const card = createCard(project);
-    (index % 2 === 0 ? leftColumn : rightColumn).appendChild(card);
-  });
-
-  section.appendChild(leftColumn);
-  section.appendChild(rightColumn);
-  scrollContainer.appendChild(section);
-}
-
-function renderDesktopLayout(projects) {
-  for (let index = 0; index < projects.length; index += 2) {
-    const pair = projects.slice(index, index + 2);
-
+  if (isMobileViewport()) {
     const section = document.createElement("div");
-    section.classList.add("gallery-section");
+    section.classList.add("gallery-section", "mobile-columns");
 
-    pair.forEach((project, pairIndex) => {
-      const baseCenterX =
-        pairIndex === 0 ? window.innerWidth * 0.27 : window.innerWidth * 0.73;
-      const baseCenterY = window.innerHeight * 0.5;
-      const card = createCard(project, baseCenterX, baseCenterY);
-      section.appendChild(card);
+    const leftCol = document.createElement("div");
+    leftCol.classList.add("mobile-column");
+
+    const rightCol = document.createElement("div");
+    rightCol.classList.add("mobile-column");
+
+    projects.forEach((project, index) => {
+      const card = createCard(project);
+      if (index % 2 === 0) leftCol.appendChild(card);
+      else rightCol.appendChild(card);
     });
 
-    scrollContainer.appendChild(section);
+    section.appendChild(leftCol);
+    section.appendChild(rightCol);
+    gallery.appendChild(section);
+  } else {
+    for (let i = 0; i < projects.length; i += 2) {
+      const pair = projects.slice(i, i + 2);
+      const section = document.createElement("div");
+      section.classList.add("gallery-section");
+
+      pair.forEach((project, pairIdx) => {
+        const baseCX = pairIdx === 0 ? window.innerWidth * 0.27 : window.innerWidth * 0.73;
+        const baseCY = window.innerHeight * 0.5;
+        const card = createCard(project, baseCX, baseCY);
+        section.appendChild(card);
+      });
+
+      gallery.appendChild(section);
+    }
   }
 }
 
-function initGalleryPage() {
-  if (!isGalleryPage) return;
+// --------------------
+// MOBILE CONTACT TRANSITIONS
+// --------------------
+function setupMobileContactTransition() {
+  if (!mobileInfoBtn || !pageTransitionCircle || !contactTransitionOverlay) return;
 
-  setupGalleryEvents();
+  mobileInfoBtn.addEventListener("click", () => {
+    if (!isMobileViewport()) {
+      window.location.href = "contact.html";
+      return;
+    }
+
+    document.body.classList.add("viewer-open");
+    contactTransitionOverlay.classList.add("active");
+    pageTransitionCircle.classList.add("active");
+
+    window.setTimeout(() => {
+      contactTransitionOverlay.classList.add("reveal");
+    }, 180);
+
+    window.setTimeout(() => {
+      window.location.href = "contact.html";
+    }, 900);
+  });
+}
+
+function setupMobileContactPageState() {
+  if (!isContactPage) return;
+
+  if (isMobileViewport()) {
+    document.body.classList.add("mobile-contact-dark");
+  } else {
+    document.body.classList.remove("mobile-contact-dark");
+  }
+}
+
+function setupMobileContactCloseTransition() {
+  if (!contactCloseBtn || !pageTransitionCircleReverse || !contactTransitionOverlayReverse) return;
+
+  contactCloseBtn.addEventListener("click", (e) => {
+    if (!isMobileViewport()) return;
+
+    e.preventDefault();
+
+    document.body.classList.add("mobile-contact-dark", "contact-closing");
+    contactTransitionOverlayReverse.classList.add("active", "closing");
+
+    window.setTimeout(() => {
+      pageTransitionCircleReverse.classList.add("shrink");
+    }, 140);
+
+    window.setTimeout(() => {
+      window.location.href = contactCloseBtn.getAttribute("href") || "index.html";
+    }, 820);
+  });
+}
+
+// --------------------
+// INIT
+// --------------------
+setupCursor();
+setupContactLink();
+setupViewerInteractions();
+setupMobileContactTransition();
+setupMobileContactPageState();
+setupMobileContactCloseTransition();
+
+window.addEventListener("resize", () => {
+  if (isContactPage) {
+    setupMobileContactPageState();
+  }
+});
+
+if (isGalleryPage) {
   showLoader();
-  setupMobileContactTransition();
 
   fetch("gallery.json")
-    .then((response) => {
-      if (!response.ok) throw new Error("Failed to load gallery data.");
-      return response.json();
-    })
-    .then((projects) =>
-      preloadImages(projects.map((project) => project.cover)).then(
-        () => projects,
-      ),
-    )
+    .then((res) => res.json())
     .then((projects) => {
-      if (isMobile) renderMobileLayout(projects);
-      else renderDesktopLayout(projects);
-
-      const lastSection = scrollContainer.querySelector(
-        ".gallery-section:last-child",
-      );
-      if (footer) {
-        if (isMobile) scrollContainer.appendChild(footer);
-        else if (lastSection) lastSection.appendChild(footer);
-      }
-
+      renderGallery(projects);
       hideLoader();
+      onScroll();
     })
-    .catch((error) => {
-      console.error("Could not load gallery data:", error);
+    .catch((err) => {
+      console.error("Could not load gallery.json:", err);
       hideLoader();
     });
 }
-
-setupCursor();
-setupContactLink();
-initGalleryPage();
