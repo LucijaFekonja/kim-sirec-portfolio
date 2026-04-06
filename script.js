@@ -7,17 +7,15 @@ const scrollHint = document.getElementById("scrollHint");
 const headerInner = document.querySelector(".header-inner");
 const loader = document.getElementById("loader");
 
-
 const mobileInfoBtn = document.getElementById("mobileInfoBtn");
 const pageTransitionCircle = document.getElementById("pageTransitionCircle");
-const contactTransitionOverlay = document.getElementById("contactTransitionOverlay");
+const contactTransitionOverlay = document.getElementById(
+  "contactTransitionOverlay",
+);
 
 const isMobile = window.innerWidth <= 768;
 
-
-
 const isGalleryPage = Boolean(scrollContainer && viewer && titleContainer);
-
 
 let viewerTrack = null;
 let currentImages = [];
@@ -39,15 +37,7 @@ function showLoader() {
 
 function hideLoader() {
   if (loader) loader.classList.remove("active");
-
-
-
-
-
 }
-
-
-
 
 function setupCursor() {
   if (!cursor) return;
@@ -66,25 +56,17 @@ function setupCursor() {
 
   document.addEventListener("mouseover", (event) => {
     if (isCursorTarget(event.target)) cursor.classList.add("hovering");
-
-
   });
 
   document.addEventListener("mouseout", (event) => {
     if (isCursorTarget(event.target)) cursor.classList.remove("hovering");
-
-
   });
 }
-
-
-
 
 function setupContactLink() {
   if (!headerInner) return;
 
   const goToContact = () => {
-
     window.location.href = "contact.html";
   };
 
@@ -98,7 +80,8 @@ function setupContactLink() {
 }
 
 function setupMobileContactTransition() {
-  if (!mobileInfoBtn || !pageTransitionCircle || !contactTransitionOverlay) return;
+  if (!mobileInfoBtn || !pageTransitionCircle || !contactTransitionOverlay)
+    return;
 
   mobileInfoBtn.addEventListener("click", () => {
     if (window.innerWidth > 768) {
@@ -142,7 +125,7 @@ function updateViewerSlide() {
     leftArrow.style.pointerEvents = currentIndex === 0 ? "none" : "auto";
   }
 
-   if (rightArrow) {
+  if (rightArrow) {
     rightArrow.style.opacity =
       currentIndex === currentImages.length - 1 ? "0" : "1";
     rightArrow.style.pointerEvents =
@@ -166,10 +149,6 @@ function prevSlide() {
 
 function openProject(project, startIndex = 0, onClose = null) {
   if (!viewer || !titleContainer) return;
-
-
-
-
 
   viewer.innerHTML = "";
   viewer.classList.add("active");
@@ -248,7 +227,6 @@ function closeViewer() {
   forceCloseViewer();
 }
 
-
 function forceCloseViewer() {
   if (!viewer || !titleContainer) return;
 
@@ -256,7 +234,7 @@ function forceCloseViewer() {
     currentCardSync(currentIndex);
     currentCardSync = null;
   }
-document.body.classList.remove("viewer-open");
+  document.body.classList.remove("viewer-open");
 
   viewer.classList.remove("active");
   viewer.innerHTML = "";
@@ -266,7 +244,6 @@ document.body.classList.remove("viewer-open");
   viewerTrack = null;
   currentImages = [];
   currentIndex = 0;
-
 }
 
 function pickOffset(naturalWidth, naturalHeight, project) {
@@ -325,25 +302,7 @@ function setupGalleryEvents() {
       tagName === "TEXTAREA" ||
       tagName === "SELECT";
 
-
-
-
     if (isTypingTarget) return;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     if (viewer.classList.contains("active")) {
       if (event.key === "ArrowRight") nextSlide();
@@ -352,11 +311,7 @@ function setupGalleryEvents() {
       return;
     }
 
-
     if (!isGalleryPage) return;
-
-
-
 
     const scrollStep = Math.round(window.innerHeight);
 
@@ -369,9 +324,6 @@ function setupGalleryEvents() {
       }
     }
 
-
-
-
     if (event.key === "ArrowUp" || event.key === "PageUp") {
       event.preventDefault();
       if (isMobile) {
@@ -379,8 +331,6 @@ function setupGalleryEvents() {
       } else if (scrollContainer) {
         scrollContainer.scrollBy({ top: -scrollStep, behavior: "smooth" });
       }
-
-
     }
 
     if (event.key === "Home") {
@@ -406,32 +356,7 @@ function setupGalleryEvents() {
         });
       }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   });
-
 
   viewer.addEventListener(
     "touchstart",
@@ -440,8 +365,6 @@ function setupGalleryEvents() {
     },
     { passive: true },
   );
-
-
 
   if (viewer && isMobile) {
     viewer.addEventListener(
@@ -514,32 +437,12 @@ function setupGalleryEvents() {
     scrollHint.classList.toggle("visible", scrollTop < 50);
   };
 
-
-
-
-
-
-
   if (scrollContainer) scrollContainer.addEventListener("scroll", onScroll);
   window.addEventListener("scroll", onScroll);
   onScroll();
 }
 
 function createCard(project, baseCenterX, baseCenterY) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const card = document.createElement("div");
   card.classList.add("project-card");
 
@@ -563,13 +466,11 @@ function createCard(project, baseCenterX, baseCenterY) {
   if (!isMobile && project.maxWidth) img.style.maxWidth = project.maxWidth;
   if (!isMobile && project.maxHeight) img.style.maxHeight = project.maxHeight;
 
-
   img.addEventListener("load", () => {
     if (!isMobile) {
       const offset = pickOffset(img.naturalWidth, img.naturalHeight, project);
       card.style.left = `${baseCenterX + offset.x}px`;
       card.style.top = `${baseCenterY + offset.y}px`;
-
     }
   });
 
@@ -658,45 +559,19 @@ function renderMobileLayout(projects) {
   const rightColumn = document.createElement("div");
   rightColumn.classList.add("mobile-column");
 
-
   projects.forEach((project, index) => {
     const card = createCard(project);
     (index % 2 === 0 ? leftColumn : rightColumn).appendChild(card);
   });
 
-
   section.appendChild(leftColumn);
   section.appendChild(rightColumn);
   scrollContainer.appendChild(section);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 function renderDesktopLayout(projects) {
   for (let index = 0; index < projects.length; index += 2) {
     const pair = projects.slice(index, index + 2);
-
-
 
     const section = document.createElement("div");
     section.classList.add("gallery-section");
@@ -710,66 +585,13 @@ function renderDesktopLayout(projects) {
     });
 
     scrollContainer.appendChild(section);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   }
 }
 
 function initGalleryPage() {
   if (!isGalleryPage) return;
 
-
-
-
-
-
   setupGalleryEvents();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   showLoader();
   setupMobileContactTransition();
@@ -797,7 +619,6 @@ function initGalleryPage() {
       }
 
       hideLoader();
-
     })
     .catch((error) => {
       console.error("Could not load gallery data:", error);

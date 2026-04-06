@@ -30,11 +30,6 @@ body {
 body.viewer-open {
   overflow: hidden;
   height: 100vh;
-
-
-
-
-
 }
 
 #cursor {
@@ -112,8 +107,6 @@ body.viewer-open {
 
 body.viewer-open #scrollContainer {
   overflow: hidden;
-
-
 }
 
 .mobile-contact-btn {
@@ -124,44 +117,38 @@ body.viewer-open #scrollContainer {
   position: fixed;
   top: 50px;
   right: 55px;
-  z-index: 4000;
+  z-index: 6003;
+  width: 20px;
+  height: 20px;
   line-height: 0;
-
   opacity: 0.3;
   transition: opacity 0.2s ease;
-
-
-
-
-
-
-
-
-
-
+  color: var(--text);
+  text-decoration: none;
+  display: block;
 }
 
 .contact-x:hover {
   opacity: 1;
 }
 
+.contact-x span {
+  position: absolute;
+  top: 9px;
+  left: 0;
+  width: 20px;
+  height: 1.5px;
+  background: currentColor;
+  transform-origin: center;
+}
 
+.contact-x span:first-child {
+  transform: rotate(45deg);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.contact-x span:last-child {
+  transform: rotate(-45deg);
+}
 
 .contact-page {
   display: flex;
@@ -187,7 +174,6 @@ body.viewer-open #scrollContainer {
   letter-spacing: 2px;
   color: var(--text);
   margin: 0;
-
 }
 
 .contact-bio {
@@ -202,15 +188,25 @@ body.viewer-open #scrollContainer {
   height: 1px;       
   background: #ddd;  
   margin: 12px 0;
-  opacity: 0;
-  transform: scaleX(0.6);
+  opacity: 0.3;
+  transform: scaleX(5);
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.contact-transition-overlay.reveal .contact-break-line {
+.contact-transition-content .contact-content .contact-break-line {
+  width: 60px;          
+  height: 1px;       
+  background: #ddd;  
+  margin: 12px 0;
+  opacity: 0.3;
+  transform: scaleX(5);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* .contact-transition-overlay.reveal .contact-break-line {
   opacity: 1;
   transform: scaleX(1);
-}
+} */
 
 .contact-links {
   display: flex;
@@ -279,14 +275,36 @@ body.viewer-open #scrollContainer {
   position: absolute;
   inset: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  text-align: center;
   color: #fff;
   opacity: 0;
   transform: translateY(16px);
+  text-align: center;
+}
+
+.contact-transition-content .contact-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  padding: 24px;
+}
+
+.contact-transition-content .contact-content .contact-name {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #fff;
+  margin: 0;
+}
+
+.contact-transition-content .contact-content .contact-bio {
+  margin: 0;
+  max-width: 520px;
+  line-height: 1.7;
 }
 
 .contact-transition-overlay.reveal .contact-transition-content {
@@ -735,12 +753,6 @@ body.viewer-open #scrollContainer {
     opacity: inherit;
   }
 
-
-
-
-
-
-
   .mobile-contact-btn {
     display: flex;
     align-items: center;
@@ -757,6 +769,11 @@ body.viewer-open #scrollContainer {
     color: #000;
     font: inherit;
     letter-spacing: 0.5px;
+  }
+  
+  .contact-name {
+    font-size: 12px;
+    font-weight: 700;
   }
 
   .contact-page {
@@ -779,180 +796,6 @@ body.viewer-open #scrollContainer {
   }
 
   body.contact-dark {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     --bg: #000;
     --text: #fff;
     --muted: rgba(255, 255, 255, 0.65);
@@ -967,36 +810,18 @@ body.viewer-open #scrollContainer {
 
   body.contact-dark .contact-x {
     opacity: 0.6;
-
   }
 
-  body.contact-dark .contact-x img,
-  body.contact-dark .contact-x svg {
-    filter: invert(1);
+  body.contact-dark .contact-x,
+  body.contact-dark .contact-x:visited,
+  body.contact-dark .contact-x:hover,
+  body.contact-dark .contact-x:active {
+    color: #fff;
   }
 
   .contact-x {
     top: 20px;
     right: 20px;
-
-
-
-
-
-
-
-  }
-
-  .contact-name {
-    font-size: 12px;
-
-
-
-
-
-
-
-
   }
 
   .mobile-columns {
