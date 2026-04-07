@@ -225,8 +225,8 @@ body.viewer-open #scrollContainer {
   position: fixed;
   top: 32px;
   right: 20px;
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: #000;
   transform: translate(50%, -50%) scale(0);
@@ -240,6 +240,11 @@ body.viewer-open #scrollContainer {
 .page-transition-circle.active {
   transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1);
   transform: translate(50%, -50%) scale(190);
+}
+
+.page-transition-circle.closing {
+  transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+  transform: translate(50%, -50%) scale(0);
 }
 
 .contact-transition-overlay {
@@ -271,14 +276,6 @@ body.viewer-open #scrollContainer {
   pointer-events: none;
 }
 
-.contact-transition-overlay.reveal .contact-transition-content {
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 0.35s ease,
-    transform 0.35s ease;
-}
-
 .contact-transition-content .contact-content {
   display: flex;
   flex-direction: column;
@@ -288,6 +285,22 @@ body.viewer-open #scrollContainer {
   text-align: center;
   padding: 24px;
   pointer-events: auto;
+}
+
+.contact-transition-overlay.reveal .contact-transition-content {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+.contact-transition-overlay.closing .contact-transition-content {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
 }
 
 .contact-transition-content .contact-name {

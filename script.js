@@ -86,6 +86,7 @@ function setupMobileContactTransition() {
   }
 
   let isContactOpen = false;
+  let isAnimating = false;
 
   function openMobileContact() {
     if (window.innerWidth > 768) {
@@ -93,30 +94,45 @@ function setupMobileContactTransition() {
       return;
     }
 
-    if (isContactOpen) return;
+    if (isContactOpen || isAnimating) return;
+
+    isAnimating = true;
     isContactOpen = true;
 
     document.body.classList.add("viewer-open");
     contactTransitionOverlay.setAttribute("aria-hidden", "false");
+
+    contactTransitionOverlay.classList.remove("closing", "reveal");
+    pageTransitionCircle.classList.remove("closing");
+
     contactTransitionOverlay.classList.add("active");
     pageTransitionCircle.classList.add("active");
 
     window.setTimeout(() => {
       if (!isContactOpen) return;
       contactTransitionOverlay.classList.add("reveal");
+      isAnimating = false;
     }, 180);
   }
 
   function closeMobileContact() {
-    if (window.innerWidth > 768 || !isContactOpen) return;
+    if (window.innerWidth > 768 || !isContactOpen || isAnimating) return;
 
+    isAnimating = true;
     isContactOpen = false;
 
     contactTransitionOverlay.classList.remove("reveal");
-    contactTransitionOverlay.classList.remove("active");
-    contactTransitionOverlay.setAttribute("aria-hidden", "true");
+    contactTransitionOverlay.classList.add("closing");
     pageTransitionCircle.classList.remove("active");
-    document.body.classList.remove("viewer-open");
+    pageTransitionCircle.classList.add("closing");
+
+    window.setTimeout(() => {
+      contactTransitionOverlay.classList.remove("active", "closing");
+      contactTransitionOverlay.setAttribute("aria-hidden", "true");
+      pageTransitionCircle.classList.remove("closing");
+      document.body.classList.remove("viewer-open");
+      isAnimating = false;
+    }, 700);
   }
 
   mobileInfoBtn.addEventListener("click", openMobileContact);
