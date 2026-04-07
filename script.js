@@ -130,6 +130,48 @@ function setupMobileContactTransition() {
   });
 }
 
+function setupContactLanguageSwitch() {
+  const langButtons = document.querySelectorAll("[data-lang-btn]");
+  const bio = document.querySelector("[data-i18n='bio']");
+
+  if (!langButtons.length || !bio || !document.body.classList.contains("contact-dark")) {
+    return;
+  }
+
+  const translations = {
+    en: {
+      pageLang: "en",
+      bio: "photography portfolio focused on architecture, interiors, and spatial detail",
+    },
+    de: {
+      pageLang: "de",
+      bio: "Fotografie-Portfolio mit Fokus auf Architektur, Innenräume und räumliche Details",
+    },
+  };
+
+  function setLanguage(lang) {
+    const content = translations[lang];
+    if (!content) return;
+
+    document.documentElement.lang = content.pageLang;
+    bio.textContent = content.bio;
+
+    langButtons.forEach((button) => {
+      const isActive = button.dataset.langBtn === lang;
+      button.classList.toggle("active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    });
+  }
+
+  langButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      setLanguage(button.dataset.langBtn);
+    });
+  });
+
+  setLanguage("en");
+}
+
 function updateViewerSlide() {
   if (!viewerTrack) return;
 
@@ -653,4 +695,5 @@ function initGalleryPage() {
 
 setupCursor();
 setupContactLink();
+setupContactLanguageSwitch();
 initGalleryPage();

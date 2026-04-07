@@ -176,7 +176,7 @@ body.viewer-open #scrollContainer {
 
 .contact-bio {
   margin: 0;
-  max-width: 520px;
+  max-width: 570px;
   line-height: 1.7;
   color: var(--muted);
 }
@@ -335,6 +335,56 @@ body.viewer-open #scrollContainer {
 .contact-transition-x span:last-child {
   transform: rotate(-45deg);
 }
+
+.contact-language-switch {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 1px;
+  z-index: 10;
+}
+
+
+.contact-lang-btn {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--muted);
+  opacity: 0.7;
+  transition: opacity 0.2s ease, color 0.2s ease;
+  cursor: none;
+}
+
+.contact-lang-btn:hover,
+.contact-lang-btn:focus-visible,
+.contact-lang-btn.active {
+  color: var(--text);
+  opacity: 1;
+}
+
+.contact-lang-separator {
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+/* body.contact-dark .contact-lang-btn {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+body.contact-dark .contact-lang-btn:hover,
+body.contact-dark .contact-lang-btn:focus-visible,
+body.contact-dark .contact-lang-btn.active {
+  color: #fff;
+}
+
+body.contact-dark .contact-lang-separator {
+  color: rgba(255, 255, 255, 0.45);
+} */
 
 .gallery-section {
   height: 100vh;
