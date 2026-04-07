@@ -12,6 +12,7 @@ const pageTransitionCircle = document.getElementById("pageTransitionCircle");
 const contactTransitionOverlay = document.getElementById(
   "contactTransitionOverlay",
 );
+const contactTransitionX = document.getElementById("contactTransitionX");
 
 const isMobile = window.innerWidth <= 768;
 
@@ -83,25 +84,49 @@ function setupMobileContactTransition() {
   if (!mobileInfoBtn || !pageTransitionCircle || !contactTransitionOverlay)
     return;
 
-  mobileInfoBtn.addEventListener("click", () => {
+  let isContactOpen = false;
+
+  function openMobileContact() {
     if (window.innerWidth > 768) {
       window.location.href = "contact.html";
       return;
     }
 
-    document.body.classList.add("viewer-open"); // reuse your scroll lock
+    if (isContactOpen) return;
+    isContactOpen = true;
+
+    document.body.classList.add("viewer-open");
+    contactTransitionOverlay.setAttribute("aria-hidden", "false");
     contactTransitionOverlay.classList.add("active");
     pageTransitionCircle.classList.add("active");
 
-    // reveal text and X slightly after the expansion starts
     window.setTimeout(() => {
       contactTransitionOverlay.classList.add("reveal");
     }, 180);
+  }
 
-    // navigate after the transition has played
-    window.setTimeout(() => {
-      window.location.href = "contact.html";
-    }, 780);
+  function closeMobileContact() {
+    if (window.innerWidth > 768 || !isContactOpen) return;
+
+    isContactOpen = false;
+
+    contactTransitionOverlay.classList.remove("reveal");
+    contactTransitionOverlay.classList.remove("active");
+    contactTransitionOverlay.setAttribute("aria-hidden", "true");
+    pageTransitionCircle.classList.remove("active");
+    document.body.classList.remove("viewer-open");
+  }
+
+  mobileInfoBtn.addEventListener("click", openMobileContact);
+
+  if (contactTransitionX) {
+    contactTransitionX.addEventListener("click", closeMobileContact);
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMobileContact();
+    }
   });
 }
 

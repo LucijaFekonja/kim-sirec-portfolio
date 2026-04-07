@@ -36,14 +36,21 @@
       id="contactTransitionOverlay"
       aria-hidden="true"
     >
-      <div class="contact-transition-x" id="contactTransitionX">
+      <button
+        class="contact-transition-x"
+        id="contactTransitionX"
+        type="button"
+        aria-label="Close contact page"
+      >
         <span></span>
         <span></span>
-      </div>
+      </button>
 
       <div class="contact-transition-content" id="contactTransitionContent">
         <div class="contact-content">
-          <h1 class="contact-name">Kim Širec</h1>
+          <h1 class="contact-name" style="font-weight: 600; color: #fff">
+            Kim Širec
+          </h1>
           <p class="contact-bio">
             photography portfolio focused on architecture, interiors, and
             spatial detail
@@ -93,12 +100,7 @@
 
     <header class="header" id="header">
       <div class="header-clip">
-        <div
-          class="header-inner"
-          role="button"
-          tabindex="0"
-          aria-label="Open contact page"
-        >
+        <div class="header-inner">
           <span class="header-name">Kim Širec</span>
           <span class="header-contact">kontakt</span>
         </div>
