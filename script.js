@@ -152,7 +152,7 @@ function setupContactLanguageSwitch() {
   const langButtons = document.querySelectorAll("[data-lang-btn]");
   const bio = document.querySelector("[data-i18n='bio']");
 
-  if (!langButtons.length || !bio || !document.body.classList.contains("contact-dark")) {
+  if (!langButtons.length || !bio ) {
     return;
   }
 

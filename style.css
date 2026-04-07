@@ -413,7 +413,6 @@ body.viewer-open #scrollContainer {
   z-index: 10;
 }
 
-
 .contact-lang-btn {
   background: transparent;
   border: 0;
@@ -437,19 +436,28 @@ body.viewer-open #scrollContainer {
   opacity: 0.6;
 }
 
-/* body.contact-dark .contact-lang-btn {
+/* default (inactive) */
+.contact-transition-content .contact-lang-btn {
   color: rgba(255, 255, 255, 0.65);
 }
 
-body.contact-dark .contact-lang-btn:hover,
-body.contact-dark .contact-lang-btn:focus-visible,
-body.contact-dark .contact-lang-btn.active {
+/* active (selected language) */
+.contact-transition-content .contact-lang-btn.active {
   color: #fff;
+  opacity: 1;
 }
 
-body.contact-dark .contact-lang-separator {
+/* hover (optional, same as active) */
+.contact-transition-content .contact-lang-btn:hover,
+.contact-transition-content .contact-lang-btn:focus-visible {
+  color: #fff;
+  opacity: 1;
+}
+
+/* separator */
+.contact-transition-content .contact-lang-separator {
   color: rgba(255, 255, 255, 0.45);
-} */
+}
 
 .gallery-section {
   height: 100vh;
@@ -911,9 +919,12 @@ body.contact-dark .contact-lang-separator {
 
   body.contact-dark .contact-x,
   body.contact-dark .contact-x:visited,
-  body.contact-dark .contact-x:hover,
   body.contact-dark .contact-x:active {
     color: #fff;
+  }
+
+  .contact-lang-btn {
+    cursor: none;
   }
 
   .mobile-columns {
