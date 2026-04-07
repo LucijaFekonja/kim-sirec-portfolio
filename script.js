@@ -81,8 +81,9 @@ function setupContactLink() {
 }
 
 function setupMobileContactTransition() {
-  if (!mobileInfoBtn || !pageTransitionCircle || !contactTransitionOverlay)
+  if (!mobileInfoBtn || !pageTransitionCircle || !contactTransitionOverlay) {
     return;
+  }
 
   let isContactOpen = false;
 
@@ -101,6 +102,7 @@ function setupMobileContactTransition() {
     pageTransitionCircle.classList.add("active");
 
     window.setTimeout(() => {
+      if (!isContactOpen) return;
       contactTransitionOverlay.classList.add("reveal");
     }, 180);
   }

@@ -233,6 +233,8 @@ body.viewer-open #scrollContainer {
   transform-origin: center;
   z-index: 5000;
   pointer-events: none;
+  opacity: 1;
+  will-change: transform;
 }
 
 .page-transition-circle.active {
@@ -243,13 +245,16 @@ body.viewer-open #scrollContainer {
 .contact-transition-overlay {
   position: fixed;
   inset: 0;
-  z-index: 5001;
+  z-index: -1;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 }
 
 .contact-transition-overlay.active {
+  z-index: 5001;
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 
@@ -269,13 +274,73 @@ body.viewer-open #scrollContainer {
 .contact-transition-overlay.reveal .contact-transition-content {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.35s ease, transform 0.35s ease;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
 }
 
-.contact-transition-content .contact-content,
-.contact-transition-content .contact-content a,
-.contact-transition-x {
+.contact-transition-content .contact-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  padding: 24px;
   pointer-events: auto;
+}
+
+.contact-transition-content .contact-name {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.contact-transition-content .contact-bio {
+  margin: 0;
+  max-width: 520px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.contact-transition-content .contact-break-line {
+  width: 60px;
+  height: 1px;
+  margin: 12px 0;
+  background: rgba(255, 255, 255, 0.22);
+  opacity: 1;
+}
+
+.contact-transition-content .contact-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.contact-transition-content .contact-links a {
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.contact-transition-content .contact-links a:hover,
+.contact-transition-content .contact-links a:focus-visible,
+.contact-transition-content .contact-links a:hover svg,
+.contact-transition-content .contact-links a:focus-visible svg {
+  color: #fff;
+}
+
+.contact-transition-content .contact-links svg {
+  color: inherit;
+  display: block;
 }
 
 .contact-transition-x {
@@ -293,29 +358,16 @@ body.viewer-open #scrollContainer {
   margin: 0;
   appearance: none;
   -webkit-appearance: none;
+  pointer-events: none;
 }
 
 .contact-transition-overlay.reveal .contact-transition-x {
   opacity: 0.7;
   transform: scale(1) rotate(0deg);
-  transition: opacity 0.25s ease, transform 0.25s ease;
-}
-
-.contact-transition-x span {
-  position: absolute;
-  top: 9px;
-  left: 0;
-  width: 20px;
-  height: 1.5px;
-  background: #fff;
-}
-
-.contact-transition-x span:first-child {
-  transform: rotate(45deg);
-}
-
-.contact-transition-x span:last-child {
-  transform: rotate(-45deg);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  pointer-events: auto;
 }
 
 .contact-transition-x span {
@@ -804,12 +856,12 @@ body.contact-dark .contact-lang-separator {
   }
 
   .mobile-info-dot {
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     background: #000;
     display: inline-block;
-    flex: 0 0 16px;
+    flex: 0 0 12px;
   }
 
   .contact-page {
