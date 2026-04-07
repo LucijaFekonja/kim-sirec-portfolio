@@ -89,17 +89,13 @@ function setupMobileContactTransition() {
   let isAnimating = false;
 
   function openMobileContact() {
-    if (window.innerWidth > 768) {
-      window.location.href = "contact.html";
-      return;
-    }
-
     if (isContactOpen || isAnimating) return;
 
     isAnimating = true;
     isContactOpen = true;
 
     document.body.classList.add("viewer-open");
+    document.body.classList.add("contact-open");
     contactTransitionOverlay.setAttribute("aria-hidden", "false");
 
     contactTransitionOverlay.classList.remove("closing", "reveal");
@@ -116,7 +112,7 @@ function setupMobileContactTransition() {
   }
 
   function closeMobileContact() {
-    if (window.innerWidth > 768 || !isContactOpen || isAnimating) return;
+    if (!isContactOpen || isAnimating) return;
 
     isAnimating = true;
     isContactOpen = false;
@@ -130,6 +126,7 @@ function setupMobileContactTransition() {
       contactTransitionOverlay.classList.remove("active", "closing");
       contactTransitionOverlay.setAttribute("aria-hidden", "true");
       pageTransitionCircle.classList.remove("closing");
+      document.body.classList.remove("contact-open");
       document.body.classList.remove("viewer-open");
       isAnimating = false;
     }, 700);
