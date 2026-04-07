@@ -112,8 +112,8 @@ body.viewer-open #scrollContainer {
 /* desktop contact page */
 .contact-x {
   position: fixed;
-  top: 50px;
-  right: 55px;
+  top: 60px;
+  right: 65px;
   z-index: 6003;
   width: 20px;
   height: 20px;
@@ -286,7 +286,7 @@ body.contact-open #cursor {
 
 .page-transition-circle.active {
   transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1);
-  transform: translate(50%, -50%) scale(220);
+  transform: translate(50%, -50%) scale(260);
 }
 
 .page-transition-circle.closing {
@@ -405,8 +405,8 @@ body.contact-open #cursor {
 
 .contact-transition-x {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 25px;
+  right: 35px;
   width: 20px;
   height: 20px;
   z-index: 5002;
@@ -936,6 +936,12 @@ body.viewer-open .mobile-contact-btn {
   .page-transition-circle {
     top: 32px;
     right: 28px;
+  }
+
+  
+  .contact-transition-x {
+    top: 20px;
+    right: 20px;
   }
 
   .contact-name {
