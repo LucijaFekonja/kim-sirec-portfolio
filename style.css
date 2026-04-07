@@ -286,7 +286,7 @@ body.contact-open #cursor {
 
 .page-transition-circle.active {
   transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1);
-  transform: translate(50%, -50%) scale(260);
+  transform: translate(50%, -50%) scale(420);
 }
 
 .page-transition-circle.closing {
