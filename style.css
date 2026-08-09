@@ -521,7 +521,11 @@ body.contact-dark #cursor {
   }
 }
 
-.info-page-content {
+.contact-page.info-page-content {
+  position: fixed;
+  inset: 0;
+  min-height: 0;
+  padding: 0;
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
