@@ -34,8 +34,8 @@ export default function ProjectCard({ project, projectIndex, language, isMobile,
       observer.disconnect();
     }, {
       root: isMobile ? null : cardRef.current?.closest("#scrollContainer"),
-      rootMargin: "0px 0px -25% 0px",
-      threshold: 0,
+      rootMargin: isMobile ? "0px" : "0px 0px -25% 0px",
+      threshold: isMobile ? 0.15 : 0,
     });
 
     observer.observe(hoverAreaRef.current);

@@ -126,7 +126,7 @@ export default function Viewer({ state, setState }) {
   useEffect(() => {
     if (!open) return undefined;
 
-    document.body.classList.add("viewer-open");
+    document.body.classList.add("viewer-open", "project-viewer-open");
     const handleKeyDown = (event) => {
       if (event.key === "ArrowRight") move(1);
       if (event.key === "ArrowLeft") move(-1);
@@ -138,7 +138,7 @@ export default function Viewer({ state, setState }) {
     viewerRef.current?.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
-      document.body.classList.remove("viewer-open");
+      document.body.classList.remove("viewer-open", "project-viewer-open");
       window.removeEventListener("popstate", forceClose);
       document.removeEventListener("keydown", handleKeyDown);
       viewerRef.current?.removeEventListener("wheel", handleWheel);

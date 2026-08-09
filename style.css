@@ -122,6 +122,17 @@ body.viewer-open #scrollContainer {
   overflow: hidden;
 }
 
+#scrollContainer,
+.header {
+  transition: filter 0.3s ease;
+}
+
+body.project-viewer-open #scrollContainer,
+body.project-viewer-open .header {
+  filter: blur(12px);
+  -webkit-filter: blur(12px);
+}
+
 /* desktop contact page */
 .contact-x {
   position: fixed;
@@ -756,8 +767,6 @@ html.gallery-reordering::view-transition-new(root) {
   content: "";
   position: absolute;
   inset: 0;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   background-color: rgba(244, 243, 243, 0.6);
   z-index: 0;
 }
