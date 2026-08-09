@@ -3,159 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kim Širec</title>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      html,
+      body,
+      #root {
+        margin: 0;
+        min-height: 100%;
+        background: #fff;
+      }
+
+      html.info-route,
+      html.info-route body,
+      html.info-route #root {
+        background: #000;
+      }
+    </style>
+    <script>
+      if (window.location.pathname === "/info") {
+        document.documentElement.classList.add("info-route");
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Red+Hat+Text&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Text&display=swap" rel="stylesheet" />
+    <title>Kim Širec</title>
   </head>
   <body>
-    <div class="custom-cursor" id="cursor"></div>
-
-    <button
-      class="mobile-contact-btn"
-      id="mobileInfoBtn"
-      type="button"
-      aria-label="Open contact page"
-    >
-      <span class="mobile-info-text">info</span>
-      <span class="mobile-info-dot"></span>
-    </button>
-
-    <div
-      class="page-transition-circle"
-      id="pageTransitionCircle"
-      aria-hidden="true"
-    ></div>
-
-    <div
-      class="contact-transition-overlay"
-      id="contactTransitionOverlay"
-      aria-hidden="true"
-    >
-      <button
-        class="contact-transition-x"
-        id="contactTransitionX"
-        type="button"
-        aria-label="Close contact page"
-      >
-        <span></span>
-        <span></span>
-      </button>
-
-      <div class="contact-transition-content" id="contactTransitionContent">
-        <div class="contact-content">
-          <h1 class="contact-name">Kim Širec</h1>
-          <p class="contact-bio" data-i18n="bio">
-            photography portfolio focused on architecture, interiors, and spatial detail
-          </p>
-          <p class="contact-break-line"></p>
-          <div class="contact-links">
-            <a href="mailto:kim.sirec100@gmail.com">kim.sirec100@gmail.com</a>
-            <a
-              href="https://instagram.com/sladkomleko/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                <circle cx="12" cy="12" r="4" />
-                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
-              </svg>
-            </a>
-          </div>
-          <div class="contact-language-switch" aria-label="Language switcher">
-            <button
-              type="button"
-              class="contact-lang-btn active"
-              data-lang-btn="en"
-              aria-pressed="true"
-            >
-              EN
-            </button>
-            <span class="contact-lang-separator">/</span>
-            <button
-              type="button"
-              class="contact-lang-btn"
-              data-lang-btn="de"
-              aria-pressed="false"
-            >
-              DE
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="scroll-hint" id="scrollHint" aria-hidden="true">
-      <img src="icons/arrow-down_128.png" alt="" width="20" height="20" />
-    </div>
-
-    <div id="loader" class="active" aria-live="polite">
-      <div class="loader-inner">
-        <span class="loader-name">Kim Širec</span>
-        <div class="loader-bar-wrap">
-          <div class="loader-bar" id="loaderBar"></div>
-        </div>
-      </div>
-    </div>
-
-    <header class="header" id="header">
-      <div class="header-clip">
-        <div class="header-inner">
-          <span class="header-name">Kim Širec</span>
-          <span class="header-contact">info</span>
-        </div>
-      </div>
-    </header>
-
-    <main class="gallery-container" id="scrollContainer">
-      <div class="gallery" id="gallery"></div>
-
-      <div class="footer">
-        <a href="mailto:kim.sirec100@gmail.com">kim.sirec100@gmail.com</a>
-        <a
-          href="https://instagram.com/sladkomleko/"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Instagram"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-            <circle cx="12" cy="12" r="4" />
-            <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
-          </svg>
-        </a>
-      </div>
-    </main>
-
-    <div class="viewer" id="viewer"></div>
-    <div id="viewer-title-container"></div>
-
-    <script src="script.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
