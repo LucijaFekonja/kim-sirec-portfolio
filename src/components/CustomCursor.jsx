@@ -6,6 +6,16 @@ export default function CustomCursor() {
     const show = () => ref.current?.classList.remove("cursor-hidden");
     const hide = () => ref.current?.classList.add("cursor-hidden");
     const move = ({ clientX, clientY, target }) => {
+      const infoDot = document.querySelector(".mobile-info-dot");
+      const dotRect = infoDot?.getBoundingClientRect();
+      const cursorRadius = 4.5;
+      const overlapsInfoDot = dotRect
+        ? Math.hypot(
+            clientX - (dotRect.left + dotRect.width / 2),
+            clientY - (dotRect.top + dotRect.height / 2),
+          ) <= cursorRadius + dotRect.width / 2
+        : false;
+
       ref.current.style.left = `${clientX}px`;
       ref.current.style.top = `${clientY}px`;
       ref.current.classList.toggle(
@@ -15,6 +25,10 @@ export default function CustomCursor() {
             ".project-hover-area, .mobile-contact-btn, .contact-transition-x, .contact-links a, .footer a, .contact-lang-btn, .viewer-arrow, .legal-close",
           ),
         ),
+      );
+      ref.current.classList.toggle(
+        "over-info-dot",
+        overlapsInfoDot,
       );
       show();
     };

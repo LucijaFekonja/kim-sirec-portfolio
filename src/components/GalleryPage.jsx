@@ -24,6 +24,7 @@ export default function GalleryPage({ onOpenInfo, language, legalDocument, onClo
 
   const openViewer = (project, index, onClose) => { history.pushState({ viewerOpen: true }, ""); setViewer({ project, index, onClose }); };
 
+  
   useEffect(() => {
     const updateViewport = () => {
       window.cancelAnimationFrame(resizeFrame.current);
@@ -90,11 +91,11 @@ export default function GalleryPage({ onOpenInfo, language, legalDocument, onClo
   const columns = [projects.filter((_, index) => index % 2 === 0), projects.filter((_, index) => index % 2 === 1)];
 
   return <>
-    <button className="mobile-contact-btn" type="button" aria-label="Open info page" onClick={onOpenInfo}><span className="mobile-info-text">info</span><span className="mobile-info-dot" /></button>
     <div className={`scroll-hint${hint ? " visible" : ""}`} aria-hidden="true"><img src="/icons/arrow-down_128.png" alt="" width="20" height="20" /></div>
-    <div id="loader" className={ready ? "" : "active"} aria-live="polite"><div className="loader-inner"><span className="loader-name">Kim Širec</span><div className="loader-bar-wrap"><div className="loader-bar" style={{ width: `${Math.round((loaded / projects.length) * 100)}%` }} /></div></div></div>
-    <header className="header"><div className="header-clip"><div className="header-inner" role="link" tabIndex="0" onClick={() => navigate("/contact")} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); navigate("/contact"); } }}><span className="header-name">Kim Širec</span><span className="header-contact">info</span></div></div></header>
+    <div id="loader" className={ready ? "" : "active"} aria-live="polite"><div className="loader-inner"><span className="loader-name">Kim Širec Photography</span><div className="loader-bar-wrap"><div className="loader-bar" style={{ width: `${Math.round((loaded / projects.length) * 100)}%` }} /></div></div></div>
     <main className="gallery-container" id="scrollContainer" ref={scrollRef} onScroll={(event) => setHint(event.currentTarget.scrollTop < 50)}>
+      <button className="mobile-contact-btn" type="button" aria-label="Open info page" onClick={onOpenInfo}><span className="mobile-info-text">info</span><span className="mobile-info-dot" /></button>
+      <header className="header"><div className="header-clip"><div className="header-inner" role="link" tabIndex="0" onClick={() => navigate("/contact")} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); navigate("/contact"); } }}><span className="header-name">Kim Širec Photography</span><span className="header-contact">info</span></div></div></header>
       <div className={`gallery gallery-layout ${mobile ? "mobile-layout" : "desktop-layout"}`}>
         <div className="gallery-columns">
           {columns.map((column, columnIndex) => <div className="gallery-column" key={columnIndex}>{column.map((project) => { const projectIndex = projects.indexOf(project); return <ProjectCard key={project.cover} project={project} projectIndex={projectIndex} language={language} isMobile={mobile} onOpen={openViewer} transitionName={`project-${projectIndex}`} revealEnabled={ready} />; })}</div>)}

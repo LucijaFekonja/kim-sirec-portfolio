@@ -65,7 +65,7 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.lang = language;
-    document.title = location.pathname === "/info" ? "Kim Širec — Info" : "Kim Širec";
+    document.title = location.pathname === "/info" ? "Kim Širec — Info" : "Kim Širec Photography";
   }, [location.pathname, language]);
 
   useLayoutEffect(() => {

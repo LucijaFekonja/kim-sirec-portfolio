@@ -29,7 +29,7 @@ body {
   overflow: hidden;
   height: 100vh;
   letter-spacing: 1px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
 }
 
@@ -61,8 +61,13 @@ body.viewer-open {
   transform: translate(-50%, -50%) rotate(45deg);
 }
 
+#cursor.over-info-dot {
+  background: #fff;
+  mix-blend-mode: difference;
+}
+
 .header {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 50px;
   width: auto;
@@ -112,6 +117,7 @@ body.viewer-open {
 */
 
 #scrollContainer {
+  position: relative;
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
@@ -245,7 +251,7 @@ body.project-viewer-open .header {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  position: fixed;
+  position: absolute;
   top: 40px;
   right: 40px;
   z-index: 6000;
@@ -263,18 +269,19 @@ body.project-viewer-open .header {
 }
 
 .mobile-info-text {
-  font-size: 11px;
+  font-size: 14px;
+  letter-spacing: 1px;
   line-height: 1;
   transition: opacity 0.2s ease;
 }
 
 .mobile-info-dot {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: #000;
   display: inline-block;
-  flex: 0 0 12px;
+  flex: 0 0 14px;
   transition: transform 0.2s ease;
 }
 
@@ -771,7 +778,7 @@ html.gallery-reordering::view-transition-new(root) {
   content: "";
   position: absolute;
   inset: 0;
-  background-color: rgba(244, 243, 243, 0.6);
+  background-color: var(--bg);
   z-index: 0;
 }
 
@@ -790,7 +797,7 @@ html.gallery-reordering::view-transition-new(root) {
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.65s ease;
 }
 
 .viewer-slide.active {
@@ -1152,7 +1159,7 @@ body.legal-open #scrollContainer {
   }
 
   .header {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -1207,17 +1214,18 @@ body.legal-open #scrollContainer {
   }
 
   .mobile-info-text {
-    font-size: 10px;
+    font-size: 14px;
+    letter-spacing: 1px;
     line-height: 1;
   }
 
   .mobile-info-dot {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     background: #000;
     display: inline-block;
-    flex: 0 0 12px;
+    flex: 0 0 14px;
   }
 
   .contact-page {
