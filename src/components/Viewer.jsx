@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { flushSync } from "react-dom";
 
 const WHEEL_THRESHOLD = 90;
 const WHEEL_IDLE_TIME = 160;
@@ -15,14 +16,33 @@ export default function Viewer({ state, setState }) {
   const stateRef = useRef(state);
   stateRef.current = state;
 
-  const { project, index, onClose } = state;
+  const { project, index, onClose, transitionName } = state;
   const open = Boolean(project);
   const images = project?.images || [];
 
   const forceClose = () => {
     const current = stateRef.current;
-    current.onClose?.(current.index);
-    setState({ project: null, index: 0, onClose: null });
+    if (!current.project) return;
+
+    const hideViewer = () => flushSync(() => {
+      current.onClose?.(current.index);
+      setState({ project: null, index: 0, onClose: null, transitionName: current.transitionName, closing: true });
+    });
+
+    if (!document.startViewTransition || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      hideViewer();
+      setState({ project: null, index: 0, onClose: null, transitionName: null, closing: false });
+      return;
+    }
+
+    document.documentElement.classList.add("viewer-closing");
+    const transition = document.startViewTransition(hideViewer);
+    transition.finished.finally(() => {
+      document.documentElement.classList.remove("viewer-closing");
+      setState((currentState) => currentState.closing
+        ? { project: null, index: 0, onClose: null, transitionName: null, closing: false }
+        : currentState);
+    });
   };
 
   const close = () => {
@@ -164,7 +184,7 @@ export default function Viewer({ state, setState }) {
         <div className="viewer-track">
           {images.map((src, imageIndex) => (
             <div key={src} className={`viewer-slide${imageIndex === index ? " active" : ""}`}>
-              <img src={`/${src}`} alt={`${project.name} image ${imageIndex + 1}`} />
+              <img src={`/${src}`} alt={`${project.name} image ${imageIndex + 1}`} style={imageIndex === index ? { viewTransitionName: transitionName } : undefined} />
             </div>
           ))}
         </div>

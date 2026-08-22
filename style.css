@@ -128,17 +128,6 @@ body.viewer-open #scrollContainer {
   overflow: hidden;
 }
 
-#scrollContainer,
-.header {
-  transition: filter 0.3s ease;
-}
-
-body.project-viewer-open #scrollContainer,
-body.project-viewer-open .header {
-  filter: blur(12px);
-  -webkit-filter: blur(12px);
-}
-
 /* desktop contact page */
 .contact-x {
   position: fixed;
@@ -503,13 +492,13 @@ body.contact-dark #cursor {
 }
 
 .contact-transition-overlay.transition-opening .contact-transition-x {
-  animation: contact-x-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.04s forwards;
+  animation: contact-x-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) 0.04s forwards;
   pointer-events: auto;
 }
 
 .contact-transition-overlay.closing .contact-transition-x {
   opacity: 0;
-  transform: scale(0.45) rotate(90deg);
+  transform: scale(0.35) rotate(90deg);
   transition:
     opacity 0.35s ease,
     transform 0.35s ease;
@@ -633,7 +622,7 @@ body.contact-dark #cursor {
   justify-content: center;
   flex: 1 1 50%;
   max-width: 50%;
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .project-hover-area {
@@ -692,6 +681,53 @@ html.gallery-reordering::view-transition-old(root),
 html.gallery-reordering::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+}
+html.viewer-opening::view-transition-group(*),
+html.viewer-closing::view-transition-group(*) {
+  animation-duration: 0.35s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+html.viewer-opening::view-transition-old(root),
+html.viewer-opening::view-transition-new(root),
+html.viewer-closing::view-transition-old(root),
+html.viewer-closing::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html.viewer-opening::view-transition-old(*),
+html.viewer-closing::view-transition-old(*) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: normal;
+  animation: none;
+  backface-visibility: hidden;
+}
+
+html.viewer-opening::view-transition-new(*),
+html.viewer-closing::view-transition-new(*) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: normal;
+  animation: none;
+  backface-visibility: hidden;
+}
+
+html.viewer-closing::view-transition-old(root) {
+  animation: viewer-background-out 0.35s linear both;
+}
+
+html.viewer-closing::view-transition-new(root) {
+  animation: gallery-background-in 0.35s linear both;
+}
+
+html.viewer-opening .viewer-arrow,
+html.viewer-opening #viewer-title-container {
+  visibility: hidden;
 }
 
 .project-hover-area:hover .project-img {
@@ -782,6 +818,40 @@ html.gallery-reordering::view-transition-new(root) {
   z-index: 0;
 }
 
+html.viewer-opening #viewer::before {
+  animation: viewer-background-in 0.38s linear both;
+}
+
+@keyframes viewer-background-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes viewer-background-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes gallery-background-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .viewer-track {
   position: relative;
   z-index: 1;
@@ -852,7 +922,7 @@ html.gallery-reordering::view-transition-new(root) {
   pointer-events: none;
   z-index: 3000;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.35s ease 0.4s;
 }
 
 #viewer-title-container.active {
@@ -1095,14 +1165,181 @@ body.legal-open #scrollContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  width: 100%;
+  gap: 12px;
+  text-align: center;
+  text-indent: 0;
 }
 
-.loader-name {
-  font-size: 32px;
-  font-weight: 700;
+/* .loader-name {
+  font-size: 14px;
+  font-weight: 100;
   color: var(--text);
-  letter-spacing: 0.01em;
+  letter-spacing: 0.08em;
+  transform: translateX(25px);
+}  */
+
+.loader-percentage {
+  width: 100%;
+  color: var(--muted);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  transform: translateX(25px);
+}
+
+.pour-loader {
+  position: relative;
+  width: 210px;
+  height: 190px;
+  margin-bottom: 8px;
+}
+
+.tetra-pak {
+  position: absolute;
+  top: -20px;
+  left: 10px;
+  width: 78px;
+  height: 104px;
+  overflow: visible;
+  transform: rotate(58deg);
+  transform-origin: 70% 78%;
+  animation: tetra-pour 1.8s ease-in-out infinite alternate;
+  z-index: 2;
+}
+
+.tetra-pak path {
+  fill: var(--bg);
+  stroke: #555;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.tetra-pak .tetra-side,
+.tetra-pak .tetra-roof-side {
+  fill: #f2f2f0;
+}
+
+.tetra-pak .tetra-opening {
+  fill: var(--bg);
+}
+
+.tetra-pak .tetra-detail {
+  fill: none;
+  stroke: #aaa;
+}
+
+.tetra-pak text {
+  fill: #555;
+  font: 500 8px "Red Hat Text", sans-serif;
+  letter-spacing: 1.5px;
+}
+
+.milk-stream {
+  position: absolute;
+  top: 87px;
+  left: 111px;
+  width: 4px;
+  height: 56px;
+  border-radius: 0 0 4px 4px;
+  background: #d9d9d5;
+  transform-origin: top;
+  animation: milk-pour 0.8s ease-in-out infinite alternate;
+  z-index: 1;
+}
+
+.loading-glass {
+  position: absolute;
+  right: 37px;
+  bottom: 1px;
+  width: 75px;
+  height: 91px;
+  background: transparent;
+  z-index: 2;
+}
+
+.glass-outline {
+  position: absolute;
+  inset: -6px 0 -5px;
+  width: 62px;
+  height: 80px;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.glass-outline ellipse,
+.glass-outline path {
+  fill: var(--bg);
+  stroke: #555;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.glass-outline path {
+  fill: none;
+}
+
+.glass-milk {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: var(--fill-level);
+  background: transparent;
+  transition: height 0.12s linear;
+}
+
+.milk-squiggle {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: var(--squiggle-width, 58%);
+  height: 7px;
+  overflow: visible;
+  transform: translateX(-64%);
+}
+
+.milk-squiggle path {
+  fill: none;
+  stroke: #777;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  shape-rendering: geometricPrecision;
+  vector-effect: non-scaling-stroke;
+}
+
+.glass-fill-mask {
+  position: absolute;
+  inset: 18px 0 30px;
+  overflow: visible;
+  /* clip-path: polygon(8% 0, 92% 0, 86% 100%, 14% 100%); */
+}
+
+@keyframes tetra-pour {
+  from { transform: rotate(54deg) translateY(0); }
+  to { transform: rotate(62deg) translateY(2px); }
+}
+
+@keyframes milk-pour {
+  from { transform: scaleY(0.88); opacity: 0.72; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tetra-pak,
+  .milk-stream {
+    animation: none;
+  }
+
+  .glass-milk {
+    transition: none;
+  }
 }
 
 .loader-bar-wrap {
