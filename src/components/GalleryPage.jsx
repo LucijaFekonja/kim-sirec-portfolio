@@ -202,7 +202,7 @@ export default function GalleryPage({ onOpenInfo, language, legalDocument, onClo
             </div>
           </div>
         </div>
-        <span className="loader-name">Kim Širec Photography</span>
+        {/* <span className="loader-name">Kim Širec Photography</span> */}
         {/* <span className="loader-percentage">{loadingProgress}%</span>  */}
       </div>
     </div>
