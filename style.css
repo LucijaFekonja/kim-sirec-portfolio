@@ -1322,8 +1322,8 @@ body.legal-open #scrollContainer {
 }
 
 @keyframes tetra-pour {
-  from { transform: rotate(54deg) translateY(0); }
-  to { transform: rotate(62deg) translateY(2px); }
+  from { transform: rotate(46deg) translateY(0); }
+  to { transform: rotate(80deg) translateY(5px); }
 }
 
 @keyframes milk-pour {
