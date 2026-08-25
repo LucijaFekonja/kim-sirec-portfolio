@@ -1,6 +1,8 @@
 export const bioTranslations = {
-  en: "photography portfolio focused on architecture, interiors, and spatial detail",
-  de: "Fotografie-Portfolio mit Fokus auf Architektur, Innenräume und räumliche Details",
+  // en: "photography portfolio focused on architecture, interiors, and spatial detail",
+  // de: "Fotografie-Portfolio mit Fokus auf Architektur, Innenräume und räumliche Details",
+  en: "your text",
+  de: "dein text",
 };
 
 const projectNames = {

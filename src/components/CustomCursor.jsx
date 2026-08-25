@@ -22,7 +22,7 @@ export default function CustomCursor() {
         "hovering",
         Boolean(
           target?.closest(
-            ".project-hover-area, .mobile-contact-btn, .contact-transition-x, .contact-links a, .footer a, .contact-lang-btn, .viewer-arrow, .legal-close",
+            ".project-hover-area, .mobile-contact-btn, .theme-switch, .scroll-to-top, .contact-transition-x, .contact-links a, .contact-legal a, .contact-credit .developer-signature, .footer a, .contact-lang-btn, .viewer-arrow, .legal-close",
           ),
         ),
       );

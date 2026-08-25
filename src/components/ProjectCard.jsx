@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { localizeProject } from "../translations";
 
-const revealedProjects = new Set();
-
 export default function ProjectCard({ project, projectIndex, language, isMobile, onOpen, transitionName, activeClosingTransition, revealEnabled }) {
   const cardRef = useRef(null);
   const hoverAreaRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [dimensions, setDimensions] = useState(null);
-  const [revealed, setRevealed] = useState(() => revealedProjects.has(project.cover));
+  const [revealed, setRevealed] = useState(false);
   const offset = isMobile ? (project.offsetMobile || { x: 0, y: 0 }) : dimensions?.height > dimensions?.width ? (project.offsetPortrait || project.offsetLandscape || { x: 0, y: 0 }) : (project.offsetLandscape || { x: 0, y: 0 });
   const cardStyle = {
     "--reveal-delay": `${(projectIndex % 2) * 70}ms`,
@@ -18,28 +16,24 @@ export default function ProjectCard({ project, projectIndex, language, isMobile,
   const localizedProject = localizeProject(project, projectIndex, language);
 
   useEffect(() => {
-    if (!revealEnabled || revealed) return undefined;
+    if (!revealEnabled) return undefined;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      revealedProjects.add(project.cover);
       setRevealed(true);
       return undefined;
     }
 
     const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return;
-      revealedProjects.add(project.cover);
-      setRevealed(true);
-      observer.disconnect();
+      setRevealed(entry.isIntersecting);
     }, {
       root: isMobile ? null : cardRef.current?.closest("#scrollContainer"),
-      rootMargin: isMobile ? "0px" : "0px 0px -25% 0px",
+      rootMargin: isMobile ? "0px" : "0px 0px -10% 0px",
       threshold: isMobile ? 0.15 : 0,
     });
 
     observer.observe(hoverAreaRef.current);
     return () => observer.disconnect();
-  }, [isMobile, project.cover, revealEnabled, revealed]);
+  }, [isMobile, revealEnabled]);
 
   return <div className={`project-card ${revealed ? "revealed" : "reveal-pending"}`} style={cardStyle} ref={cardRef}>
     <div className="project-hover-area" ref={hoverAreaRef} onClick={(event) => !event.target.closest(".img-dot") && onOpen(localizedProject, activeIndex, setActiveIndex, transitionName, hoverAreaRef.current?.querySelector(".project-img"))}>

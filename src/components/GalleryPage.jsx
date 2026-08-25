@@ -234,14 +234,17 @@ export default function GalleryPage({ onOpenInfo, language, legalDocument, onClo
         <div className="gallery-columns">
           {columns.map((column, columnIndex) => <div className="gallery-column" key={columnIndex}>{column.map((project) => { const projectIndex = projects.indexOf(project); const transitionName = `project-${projectIndex}`; return <ProjectCard key={project.cover} project={project} projectIndex={projectIndex} language={language} isMobile={mobile} onOpen={openViewer} transitionName={transitionName} activeClosingTransition={viewer.closing ? viewer.transitionName : null} revealEnabled={ready} />; })}</div>)}
         </div>
-        <Footer language={language} />
+        <button className="scroll-to-top" type="button" aria-label="Scroll to top" onClick={() => (mobile ? window : scrollRef.current)?.scrollTo({ top: 0, behavior: "smooth" })}>
+          <img src="/icons/arrow-down_128.png" alt="" width="20" height="20" />
+        </button>
+        {/* <Footer language={language} /> */}
       </div>
     </main>
     <Viewer state={viewer} setState={setViewer} />
-    {legalDocument && <LegalModal type={legalDocument} language={language} onClose={onCloseLegal} />}
+    {/* {legalDocument && <LegalModal type={legalDocument} language={language} onClose={onCloseLegal} />} */}
   </>;
 }
 
-function Footer({ language }) {
-  return <div className="footer legal-footer"><Link to="/privacy-policy">{legalDocuments[language].privacy.linkLabel}</Link><Link to="/terms-and-conditions">{legalDocuments[language].terms.linkLabel}</Link><a className="developer-signature" href="https://github.com/LucijaFekonja" target="_blank" rel="noreferrer">Site by Lucija Fekonja</a></div>;
-}
+// function Footer({ language }) {
+//   return <div className="footer legal-footer"><Link to="/privacy-policy">{legalDocuments[language].privacy.linkLabel}</Link><Link to="/terms-and-conditions">{legalDocuments[language].terms.linkLabel}</Link><a className="developer-signature" href="https://github.com/LucijaFekonja" target="_blank" rel="noreferrer">Site by Lucija Fekonja</a></div>;
+// }

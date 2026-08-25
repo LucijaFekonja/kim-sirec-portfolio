@@ -5,8 +5,8 @@ import ContactPage from "./components/ContactPage";
 import ContactContent from "./components/ContactContent";
 import CustomCursor from "./components/CustomCursor";
 
-const OPEN_REVEAL_DELAY = 80;
 const TRANSITION_DURATION = 1000;
+const OPEN_REVEAL_DELAY = TRANSITION_DURATION * 0.5;
 const OPEN_PREPARE_DELAY = 20;
 const CLOSE_PREPARE_DELAY = 20;
 
@@ -16,6 +16,7 @@ export default function App() {
   const timers = useRef([]);
   const [transition, setTransition] = useState("idle");
   const [language, setLanguage] = useState("en");
+  const [invertedTheme, setInvertedTheme] = useState(false);
   const legalDocument = location.pathname === "/privacy-policy"
     ? "privacy"
     : location.pathname === "/terms-and-conditions" ? "terms" : null;
@@ -68,6 +69,11 @@ export default function App() {
     document.title = location.pathname === "/info" ? "Kim Širec — Info" : "Kim Širec Photography";
   }, [location.pathname, language]);
 
+  useEffect(() => {
+    document.body.classList.toggle("theme-inverted", invertedTheme);
+    return () => document.body.classList.remove("theme-inverted");
+  }, [invertedTheme]);
+
   useLayoutEffect(() => {
     document.documentElement.classList.toggle("info-route", location.pathname === "/info");
   }, [location.pathname]);
@@ -80,6 +86,7 @@ export default function App() {
   return (
     <>
       <CustomCursor />
+      <button className="theme-switch" type="button" aria-label="Invert page colours" aria-pressed={invertedTheme} onClick={() => setInvertedTheme((inverted) => !inverted)} />
       <Routes>
         <Route path="/info" element={<ContactPage onClose={closeInfo} language={language} onLanguageChange={setLanguage} />} />
         <Route path="*" element={<GalleryPage onOpenInfo={openInfo} language={language} legalDocument={legalDocument} onCloseLegal={closeLegal} />} />
