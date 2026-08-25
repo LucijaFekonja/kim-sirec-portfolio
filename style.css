@@ -800,6 +800,7 @@ html.viewer-opening #viewer-title-container {
   position: fixed;
   inset: 0;
   display: none;
+  background: var(--bg);;
   z-index: 2000;
   overflow: hidden;
 }
@@ -943,12 +944,11 @@ html.viewer-opening #viewer::before {
 }
 
 body.viewer-open .mobile-contact-btn {
-  opacity: 0.18;
-  filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  /* overflow: hidden; */
+  filter: none;
   pointer-events: none;
-  /* transition:
-    opacity 0.25s ease,
-    filter 0.25s ease; */
 }
 
 .footer {
