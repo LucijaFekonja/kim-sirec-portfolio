@@ -1204,7 +1204,7 @@ body.legal-open #scrollContainer {
   overflow: visible;
   transform: rotate(58deg);
   transform-origin: 70% 78%;
-  animation: tetra-pour 1.8s ease-in-out infinite alternate;
+  /* animation: tetra-pour 1.8s ease-in-out infinite alternate; */
   z-index: 2;
 }
 
@@ -1239,15 +1239,41 @@ body.legal-open #scrollContainer {
 
 .milk-stream {
   position: absolute;
-  top: 87px;
-  left: 111px;
-  width: 4px;
-  height: 56px;
-  border-radius: 0 0 4px 4px;
-  background: #d9d9d5;
+  top: 28px;
+  left: 106px;
+  width: 24px;
+  height: 62px;
+  overflow: visible;
   transform-origin: top;
-  animation: milk-pour 0.8s ease-in-out infinite alternate;
-  z-index: 1;
+  /* animation: milk-pour 1.8s ease-in-out infinite alternate; */
+  z-index: 3;
+}
+
+.milk-stream path {
+  fill: none;
+  stroke: #777;
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  shape-rendering: geometricPrecision;
+  vector-effect: non-scaling-stroke;
+}
+
+.milk-stream .stream-left {
+  animation: stream-left-wave 1.8s ease-in-out infinite alternate;
+}
+
+.milk-stream .stream-right {
+  animation: stream-right-wave 1.8s ease-in-out infinite alternate;
+}
+
+.milk-stream .stream-fill {
+  animation: stream-fill-wave 1.8s ease-in-out infinite alternate;
+}
+
+.milk-stream .stream-fill {
+  fill: var(--bg);
+  stroke: none;
 }
 
 .loading-glass {
@@ -1327,8 +1353,8 @@ body.legal-open #scrollContainer {
 }
 
 @keyframes milk-pour {
-  from { transform: scaleY(0.88); opacity: 0.72; }
-  to { transform: scaleY(1); opacity: 1; }
+  0% { top: 28px; left: 102.5px; height: 62px; opacity: 0.72; }
+  100% { top: 62px; left: 109px; height: 28px; opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1339,6 +1365,36 @@ body.legal-open #scrollContainer {
 
   .glass-milk {
     transition: none;
+  }
+}
+
+@keyframes stream-left-wave {
+  from {
+    d: path("M7.8 12 C10.2 11.3 12.9 20.5 13.1 31.8 C13.2 39 12.9 46 12 53");
+  }
+
+  to {
+    d: path("M7.8 12 C10.2 11.3 12.1 20.5 12.2 31.8 C12.5 39 12.7 46 12 53");
+  }
+}
+
+@keyframes stream-right-wave {
+  from {
+    d: path("M7.8 9 C10.4 8.8 12.7 10.2 14.6 12.7 S17.7 20.8 17.8 31.8 S17.8 46.3 16.9 53");
+  }
+
+  to {
+    d: path("M7.8 9 C10.4 8.8 12.7 10.2 14.2 12.7 S16.9 20.8 16.9 31.8 S17.3 46.3 16.9 53");
+  }
+}
+
+@keyframes stream-fill-wave {
+  from {
+    d: path("M9 11 C10.4 8.8 12.7 10.2 14.6 12.7 S17.7 20.8 17.8 31.8 S17.8 46.3 16.9 53 L12 53 C12.9 46 13.2 39 13.1 31.8 C12.9 20.5 10.2 11.3 7 11 Z");
+  }
+
+  to {
+    d: path("M9 11 C10.4 8.8 12.7 10.2 14.2 12.7 S16.9 20.8 16.9 31.8 S17.3 46.3 16.9 53 L12 53 C12.7 46 12.5 39 12.2 31.8 C12.1 20.5 10.2 11.3 7 11 Z");
   }
 }
 

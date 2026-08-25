@@ -8,7 +8,7 @@ import ProjectCard from "./ProjectCard";
 import Viewer from "./Viewer";
 
 let galleryHasLoaded = false;
-const MINIMUM_LOADER_DURATION = 500;
+const MINIMUM_LOADER_DURATION = 600;
 
 export default function GalleryPage({ onOpenInfo, language, legalDocument, onCloseLegal }) {
   // Keep the previously disabled Kim Širec header link inactive.
@@ -186,6 +186,27 @@ export default function GalleryPage({ onOpenInfo, language, legalDocument, onClo
             {/* <path className="tetra-detail" d="M22 51 L54 51 M22 91 L54 91" /> */}
             {/* <text x="38" y="74" textAnchor="middle">MILK</text> */}
           </svg>
+          
+          <svg
+            className="milk-stream"
+            viewBox="0 0 24 54"
+            preserveAspectRatio="none"
+            role="presentation"
+          >
+            <path
+              className="stream-fill"
+              d="M7.8 9 C10.4 8.8 12.7 10.2 14.6 12.7 S17.7 20.8 17.8 31.8 S17.8 46.3 16.9 53 L12 53 C12.9 46 13.2 39 13.1 31.8 C12.9 20.5 10.2 11.3 7 11 Z"
+            />
+            <path
+              className="stream-left"
+              d="M7.5 11 C10.2 11.3 12.9 20.5 13.1 31.8 C13.2 39 12.9 46 12 53"
+            />
+            <path
+              className="stream-right"
+              d="M7.8 9 C10.4 8.8 12.7 10.2 14.6 12.7 S17.7 20.8 17.8 31.8 S17.8 46.3 16.9 53"
+            />
+          </svg>
+
           <div className="loading-glass">
             <svg className="glass-outline" viewBox="0 0 75 100" role="presentation">
               <ellipse cx="37.5" cy="7" rx="35" ry="6" />
