@@ -31,7 +31,7 @@ body {
 .contact-page,
 .contact-content {
   background-color: var(--bg);
-  transition: background-color 0.25s ease;
+  transition: background-color 0.4s ease;
 }
 
 body {
@@ -44,8 +44,8 @@ body {
   font-size: 14px;
   font-weight: 400;
   transition:
-    background-color 0.25s ease,
-    color 0.25s ease;
+    background-color 0.4s ease,
+    color 0.4s ease;
 }
 
 body.viewer-open {
@@ -372,8 +372,8 @@ body.viewer-open #scrollContainer {
   background: var(--bg);
   z-index: 6004;
   transition:
-    background-color 0.25s ease,
-    border-color 0.25s ease,
+    background-color 0.4s ease,
+    border-color 0.4s ease,
     transform 0.2s ease;
 }
 
@@ -929,9 +929,10 @@ html.viewer-opening #viewer-title-container {
   position: fixed;
   inset: 0;
   display: none;
-  background: var(--bg);;
+  background: var(--bg);
   z-index: 2000;
   overflow: hidden;
+  transition: background-color 0.4s ease;
 }
 
 #viewer.active {
@@ -946,6 +947,7 @@ html.viewer-opening #viewer-title-container {
   inset: 0;
   background-color: var(--bg);
   z-index: 0;
+  transition: background-color 0.4s ease;
 }
 
 html.viewer-opening #viewer::before {
